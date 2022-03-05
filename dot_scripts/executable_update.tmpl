@@ -1,0 +1,88 @@
+#! /usr/bin/env zsh
+
+# Test for flags
+for arg in "$@"; do
+  case $arg in
+    --no-restart)
+      local should_restart=false
+      shift
+      ;;
+  esac
+done
+
+# Maintain sudo
+sudo -v
+while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+
+# Run in home folder
+( cd ~
+
+# Brew
+if (( $+commands[brew] )); then
+  # brew cannot run as root
+  sudo -u $(logname) brew update
+  sudo -u $(logname) brew upgrade --greedy
+  sudo -u $(logname) brew autoremove
+  sudo -u $(logname) brew cleanup
+{{ if eq .chezmoi.os "darwin" }}
+  # Relink Java if needed
+  if [ "$(readlink -- "/Library/Java/JavaVirtualMachines/openjdk.jdk")" != /usr/local/opt/openjdk/libexec/openjdk.jdk ] && [ -f /usr/local/opt/openjdk/libexec/openjdk.jdk]; then
+    sudo -- ln -sfn /usr/local/opt/openjdk/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/
+  fi
+{{ end }}
+  # Relink python if needed
+  if brew list -1 | grep python@3. >/dev/null && [[ ! -f $(brew --prefix)/bin/python3 ]]; then 
+    sudo -u $(logname) brew link --overwrite $python_version
+  fi
+fi
+
+{{ if eq .chezmoi.os "darwin" }}
+# mac App Store
+mas upgrade
+
+# mac software update
+softwareupdate --install -a --agree-to-license
+
+# pam-watchid
+#grep -q "auth sufficient pam_watchid.so" "/etc/pam.d/sudo" && \
+#bash -c "$(curl -fsSL https://raw.githubusercontent.com/logicer16/pam-watchid/HEAD/install.sh)" -- enable
+{{ end }}
+
+# python
+if (( $+commands[python] )); then
+  sudo -u $(logname) python -m pip list --outdated --format=freeze  --not-required | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 sudo -u $(logname) python -m pip install -U
+  sudo -u $(logname) python -m pip check
+fi
+
+# nvm
+if (( $+commands[nvm] )); then
+  nvm install node --reinstall-packages-from=node # Upgrade node version
+  nvm install "*/lts" # Upgrade lts node version
+fi
+
+# npm
+if (( $+commands[npm] )); then
+  sudo -u $(logname) npm update
+  npm update -g
+fi
+
+# git repos
+for GIT_UPDATE_FOLDER in $GIT_UPDATE_FOLDERS; do
+  git -C $GIT_UPDATE_FOLDER pull --no-rebase -q
+done
+
+# gem
+if (( $+commands[gem] )); then
+{{ if eq .chezmoi.os "darwin" }}
+  if (( $+commands[brew] )); then
+    sudo -H gem update -n /usr/local/bin openssl -- --with-openssl-dir="$(brew --prefix openssl@1.1)" # https://github.com/ruby/openssl/issues/385
+  fi
+{{ end }}
+  sudo gem update
+  sudo gem cleanup
+fi
+
+)
+# End Run in home folder
+
+return $?

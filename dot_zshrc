@@ -1,0 +1,103 @@
+#! /usr/bin/env zsh
+
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# START NO OUTPUT
+
+# Path to your oh-my-zsh installation.
+export ZSH="/Users/jamesross/.oh-my-zsh"
+
+# CASE_SENSITIVE="false"
+
+# Disable bi-weekly auto-update checks.
+DISABLE_AUTO_UPDATE="true"
+
+# Uncomment the following line if pasting URLs and other text is messed up.
+# DISABLE_MAGIC_FUNCTIONS="true"
+
+# Uncomment the following line to display red dots whilst waiting for completion.
+COMPLETION_WAITING_DOTS="true"
+
+# Fix root shell (ohmyzsh/ohmyzsh#4426)
+ZSH_DISABLE_COMPFIX="true"
+
+# Stop oh-my-zsh update prompt
+DISABLE_AUTO_UPDATE=true
+
+# Uncomment the following line if you want to change the command execution time
+# stamp shown in the history command output.
+# You can set one of the optional three formats:
+# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
+# or set a custom format using the strftime function format specifications,
+# see 'man strftime' for details.
+# HIST_STAMPS="mm/dd/yyyy"
+
+# Would you like to use another custom folder than $ZSH/custom?
+# ZSH_CUSTOM=/path/to/new-custom-folder
+
+# Which plugins would you like to load?
+# Standard plugins can be found in $ZSH/plugins/
+# Custom plugins may be added to $ZSH_CUSTOM/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+# Add wisely, as too many plugins slow down shell startup.
+# Add plugins with output before 'AUTORUN' and plugins without
+# output after 'AUTORUN'.
+plugins=(git zsh-better-npm-completion zsh-completions zsh-syntax-highlighting)
+
+FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+
+# Add python, make, Ruby, cURL, Homebrew's "sbin" to PATH
+export PATH="\
+/usr/local/opt/$($HOME/.scripts/get_newest_python)/libexec/bin\
+/usr/local/opt/make/libexec/gnubin:\
+/usr/local/opt/ruby/bin:\
+/usr/local/opt/curl/bin:\
+$HOME/.scripts:\
+$HOME/bin:\
+/usr/local/sbin:\
+$PATH"
+
+# Oh My Zsh Theme
+ZSH_THEME="powerlevel10k/powerlevel10k"
+
+source $ZSH/oh-my-zsh.sh
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# Options
+unsetopt LIST_BEEP
+
+# Keybindings
+bindkey "${key[Up]}" up-line-or-beginning-search
+bindkey "${key[Down]}" down-line-or-beginning-search
+
+# nvm
+export NVM_DIR="$HOME/.nvm"
+[ -s "/usr/local/opt/nvm/nvm.sh" ] && \. "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+
+# Additional completions
+(( $+commands[npm] )) && source <(npm completion)
+(( $+commands[pip] )) && source <(pip completion --zsh)
+
+GIT_UPDATE_FOLDERS=(  )
+
+export MANPATH="/usr/local/man:$MANPATH"
+export LESS="-R"
+if (( $+commands[code] )); then
+  export VISUAL="/usr/local/bin/code --wait --new-window"
+else
+  export EDITOR="/usr/bin/env nano"
+fi
+
+# Aliases
+alias mkdir="mkdir -p"
+# I'm hopeless
+alias ehco="echo"
+
+# Initialise completions
+rm -f ~/.zcompdump
+compinit

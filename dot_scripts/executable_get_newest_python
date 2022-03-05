@@ -1,0 +1,12 @@
+#! /usr/bin/env zsh
+
+# Get values
+values=()
+for string in $(brew list -1 | grep python@3.); do
+  [[ $string =~ 'python@3.([0-9]+)' ]]
+  values+=$match
+done
+
+# Sort
+echo "python@3."$(printf '%s\n' "${values[@]}" |
+awk '$1 > m || NR == 1 { m = $1 } END { print m }')

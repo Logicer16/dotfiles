@@ -1,0 +1,12 @@
+#! /usr/bin/env zsh
+
+if [[ -x "${VISUAL%% *}" ]]; then
+  eval $VISUAL "$1"
+elif [[ -x "${EDITOR%% *}" ]]; then
+  eval $EDITOR "$1"
+else
+  printf "No editor is defined; defaulting to vi. Define $VISUAL or $EDITOR to configure the editor."
+  sleep 3
+  vi $1
+fi
+unset IFS
