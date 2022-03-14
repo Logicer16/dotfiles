@@ -50,7 +50,7 @@ FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
 
 # Add python, make, Ruby, cURL, Homebrew's "sbin" to PATH
 export PATH="\
-/usr/local/opt/$($HOME/.scripts/get_newest_python)/libexec/bin\
+/usr/local/opt/$($HOME/.scripts/get_newest_python)/libexec/bin:\
 /usr/local/opt/make/libexec/gnubin:\
 /usr/local/opt/ruby/bin:\
 /usr/local/opt/curl/bin:\
