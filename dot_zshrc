@@ -7,7 +7,7 @@ fi
 # START NO OUTPUT
 
 # Path to your oh-my-zsh installation.
-export ZSH="/Users/jamesross/.oh-my-zsh"
+export ZSH="$HOME/.oh-my-zsh"
 
 # CASE_SENSITIVE="false"
 
@@ -46,18 +46,25 @@ DISABLE_AUTO_UPDATE=true
 # output after 'AUTORUN'.
 plugins=(git zsh-better-npm-completion zsh-completions zsh-syntax-highlighting)
 
-FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+if (( $+commands[brew] )); then
+  FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+fi
 
-# Add python, make, Ruby, cURL, Homebrew's "sbin" to PATH
 export PATH="\
-/usr/local/opt/$($HOME/.scripts/get_newest_python)/libexec/bin:\
-/usr/local/opt/make/libexec/gnubin:\
-/usr/local/opt/ruby/bin:\
-/usr/local/opt/curl/bin:\
 $HOME/.scripts:\
 $HOME/bin:\
-/usr/local/sbin:\
 $PATH"
+
+if (( $+commands[code] )); then
+  # Add python, make, Ruby, cURL, Homebrew's "sbin" to PATH
+  export PATH="\
+  /usr/local/opt/$($HOME/.scripts/get_newest_python)/libexec/bin:\
+  /usr/local/opt/make/libexec/gnubin:\
+  /usr/local/opt/ruby/bin:\
+  /usr/local/opt/curl/bin:\
+  /usr/local/sbin:\
+  $PATH"
+fi
 
 # Oh My Zsh Theme
 ZSH_THEME="powerlevel10k/powerlevel10k"
@@ -69,6 +76,11 @@ source $ZSH/oh-my-zsh.sh
 
 # Options
 unsetopt LIST_BEEP
+
+# Ensure key is defined
+(( $+key )) || declare -A key
+(( $+key[Up] )) || key[Up]="$terminfo[kcuu1]"
+(( $+key[Down] )) || key[Down]="$terminfo[kcud1]"
 
 # Keybindings
 bindkey "${key[Up]}" up-line-or-beginning-search
