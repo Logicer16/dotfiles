@@ -1,8 +1,12 @@
 Host *
-   UseKeychain yes
-   AddKeysToAgent yes
-   IdentityFile ~/.ssh/id_rsa
+  UseKeychain yes
+  AddKeysToAgent yes
+  IdentityFile ~/.ssh/id_rsa
 
 Host ubuntuvm
-   HostName ubuntu-vm.local
-   User jamesross
+  HostName ubuntu-vm.local
+  User jamesross
+
+Host pi
+  Hostname pi.local
+  User jamesross
