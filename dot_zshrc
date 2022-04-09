@@ -55,7 +55,7 @@ $HOME/.scripts:\
 $HOME/bin:\
 $PATH"
 
-if (( $+commands[code] )); then
+if (( $+commands[brew] )); then
   # Add python, make, Ruby, cURL, Homebrew's "sbin" to PATH
   export PATH="\
 /usr/local/opt/$($HOME/.scripts/get_newest_python)/libexec/bin:\
