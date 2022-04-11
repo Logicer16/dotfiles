@@ -110,6 +110,9 @@ alias mkdir="mkdir -p"
 # I'm hopeless
 alias ehco="echo"
 
+# Watch update frequency
+WATCH_INTERVAL=0.2
+
 # Initialise completions
 rm -f ~/.zcompdump
 compinit
