@@ -111,7 +111,7 @@ alias mkdir="mkdir -p"
 alias ehco="echo"
 
 # Watch update frequency
-WATCH_INTERVAL=0.2
+export WATCH_INTERVAL=0.2
 
 # Initialise completions
 rm -f ~/.zcompdump
