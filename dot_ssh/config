@@ -10,3 +10,19 @@ Host ubuntuvm
 Host pi
   Hostname pi.local
   User jamesross
+
+host google-server
+  HostName 35.208.173.23
+  User jamesross
+
+host oracle-server-arm
+  HostName 130.162.195.57
+  User opc
+
+host oracle-server-x64-1
+  HostName 168.138.26.220
+  User opc
+
+host oracle-server-x64-2
+  HostName 130.162.195.118
+  User opc
