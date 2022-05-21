@@ -10,6 +10,14 @@ for arg in "$@"; do
   esac
 done
 
+# Check for Apple Watch sudo
+{{ if eq .chezmoi.os "darwin" }}
+  if ! cat /etc/pam.d/sudo | grep "auth sufficient pam_watchid.so" &> /dev/null; then
+    echo "Someone removed pam-watchid. Reinstalling..."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/logicer16/pam-watchid/HEAD/install.sh)" -- enable
+  fi
+{{ end }}
+
 # Maintain sudo
 sudo -v
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done &> /dev/null &
@@ -81,6 +89,8 @@ if (( $+commands[gem] )); then
   sudo gem update
   sudo gem cleanup
 fi
+
+# chezmoi update
 
 )
 # End Run in home folder
