@@ -9,4 +9,3 @@ else
   sleep 3
   vi $1
 fi
-unset IFS
