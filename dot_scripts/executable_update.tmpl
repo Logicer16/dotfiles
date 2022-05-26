@@ -71,7 +71,7 @@ fi
 # npm
 if (( $+commands[npm] )); then
   sudo -u $(logname) npm update
-  npm update -g
+  npm update --location=global
 fi
 
 # git repos
