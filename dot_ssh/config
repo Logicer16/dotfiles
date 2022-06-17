@@ -19,8 +19,12 @@ host oracle-server-arm
   HostName 130.162.195.57
   User opc
 
+host oracle-server-arm-minecraft
+  HostName 130.162.195.57
+  User minecraft
+
 host oracle-server-x64-1
-  HostName 168.138.26.220
+  HostName 168.138.6.224
   User opc
 
 host oracle-server-x64-2
