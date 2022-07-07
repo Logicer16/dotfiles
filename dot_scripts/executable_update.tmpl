@@ -83,9 +83,13 @@ fi
 
 # dnf/yum (i.e. redhat-based package managers)
 if (( $+commands[dnf] )); then
-  sudo dnf upgrade
+  sudo dnf -y upgrade
+  sudo dnf -y check
+  sudo dnf -y autoremove
 elif (( $+commands[yum] )); then
-  sudo yum upgrade
+  sudo yum -y upgrade
+  sudo yum -y check
+  sudo yum -y autoremove
 fi
 
 # pacman (default via yay)
