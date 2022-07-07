@@ -81,6 +81,13 @@ if (( $+commands[flatpak] )); then
   sudo flatpak update -y
 fi
 
+# dnf/yum (i.e. redhat-based package managers)
+if (( $+commands[dnf] )); then
+  sudo dnf upgrade
+elif (( $+commands[yum] )); then
+  sudo yum upgrade
+fi
+
 # pacman (default via yay)
 if (( $+commands[yay] )); then
   sudo yay -Syu
