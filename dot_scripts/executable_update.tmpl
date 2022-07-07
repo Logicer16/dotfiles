@@ -56,13 +56,13 @@ mas upgrade
 softwareupdate --install -a --agree-to-license
 {{ end }}
 
-# apt
+# apt (debian)
 if (( $+commands[apt-get] )); then
-  apt-get -y update
-  apt-get -y dist-upgrade
-  apt-get -y check
-  apt-get -y autoremove
-  apt-get -y autoclean
+  sudo apt-get -y update
+  sudo apt-get -y dist-upgrade
+  sudo apt-get -y check
+  sudo apt-get -y autoremove
+  sudo apt-get -y autoclean
 fi
 
 # Not sure if this works
