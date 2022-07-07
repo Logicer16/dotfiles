@@ -133,7 +133,10 @@ if (( $+commands[gem] )); then
   sudo gem cleanup
 fi
 
-# chezmoi update
+# chezmoi
+if (( $+commands[chezmoi] )); then
+  chezmoi update
+fi
 
 )
 # End Run in home folder
