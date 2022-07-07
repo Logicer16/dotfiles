@@ -4,7 +4,7 @@
 for arg in "$@"; do
   case $arg in
     --no-restart)
-      local should_restart=false
+      local no_restart=true
       shift
       ;;
   esac
@@ -109,5 +109,13 @@ fi
 
 )
 # End Run in home folder
+
+if [ -f /var/run/reboot-required ]; then
+  if $no_restart; then
+    echo "A Reboot is Required"
+  else
+    reboot
+  fi
+fi
 
 return $?
