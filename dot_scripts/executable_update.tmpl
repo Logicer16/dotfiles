@@ -71,6 +71,16 @@ fi
 #   do-release-upgrade
 # fi
 
+# snaps (piece of shit)
+if (( $+commands[snap] )); then
+  snap refresh
+fi
+
+# flatpaks (the other piece of shit)
+if (( $+commands[flatpak] )); then
+  sudo flatpak update -y
+fi
+
 # pacman (default via yay)
 if (( $+commands[yay] )); then
   sudo yay -Syu
