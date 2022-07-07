@@ -14,7 +14,7 @@ done
 {{ if eq .chezmoi.os "darwin" }}
   if ! cat /etc/pam.d/sudo | grep "auth sufficient pam_watchid.so" &> /dev/null; then
     echo "Someone removed pam-watchid. Reinstalling..."
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/logicer16/pam-watchid/HEAD/install.sh)" -- enable
+    bash -c "$(curl -fsSL https://raw.githubusercontent.com/logicer16/pam-watchid/HEAD/install.sh)" -- enable
   fi
 {{ end }}
 
@@ -45,7 +45,7 @@ if (( $+commands[brew] )); then
   if brew list -1 | grep python@3. >/dev/null && [[ ! -f $(brew --prefix)/bin/python3 ]]; then 
     sudo -u $(logname) brew link --overwrite $python_version
   fi
-  
+
 fi
 
 {{ if eq .chezmoi.os "darwin" }}
@@ -54,10 +54,6 @@ mas upgrade
 
 # mac software update
 softwareupdate --install -a --agree-to-license
-
-# pam-watchid
-#grep -q "auth sufficient pam_watchid.so" "/etc/pam.d/sudo" && \
-#bash -c "$(curl -fsSL https://raw.githubusercontent.com/logicer16/pam-watchid/HEAD/install.sh)" -- enable
 {{ end }}
 
 # python
