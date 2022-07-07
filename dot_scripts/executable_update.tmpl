@@ -32,16 +32,20 @@ if (( $+commands[brew] )); then
   sudo -u $(logname) brew upgrade --greedy
   sudo -u $(logname) brew autoremove
   sudo -u $(logname) brew cleanup
+
+  # Relinking if required
+
 {{ if eq .chezmoi.os "darwin" }}
-  # Relink Java if needed
+  # Java
   if [ "$(readlink -- "/Library/Java/JavaVirtualMachines/openjdk.jdk")" != /usr/local/opt/openjdk/libexec/openjdk.jdk ] && [ -f /usr/local/opt/openjdk/libexec/openjdk.jdk]; then
     sudo -- ln -sfn /usr/local/opt/openjdk/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/
   fi
 {{ end }}
-  # Relink python if needed
+  # Python
   if brew list -1 | grep python@3. >/dev/null && [[ ! -f $(brew --prefix)/bin/python3 ]]; then 
     sudo -u $(logname) brew link --overwrite $python_version
   fi
+  
 fi
 
 {{ if eq .chezmoi.os "darwin" }}
