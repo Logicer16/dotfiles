@@ -41,11 +41,6 @@ if (( $+commands[brew] )); then
     sudo -- ln -sfn /usr/local/opt/openjdk/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/
   fi
 {{ end }}
-  # Python
-  if brew list -1 | grep python@3. >/dev/null && [[ ! -f $(brew --prefix)/bin/python3 ]]; then 
-    sudo -u $(logname) brew link --overwrite $python_version
-  fi
-
 fi
 
 {{ if eq .chezmoi.os "darwin" }}
