@@ -97,8 +97,12 @@ fi
 
 # python
 if (( $+commands[python] )); then
-  sudo -u $(logname) python -m pip list --outdated --format=freeze  --not-required | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 sudo -u $(logname) python -m pip install -U
-  sudo -u $(logname) python -m pip check
+  # pip
+  python -c "import pip" &> /dev/null
+  if [ $? -eq 0 ]; then
+    sudo -u $(logname) python -m pip list --outdated --format=freeze  --not-required | grep -v '^\-e' | cut -d = -f 1 | xargs -n1 sudo -u $(logname) python -m pip install -U
+    sudo -u $(logname) python -m pip check
+  fi
 fi
 
 # nvm
