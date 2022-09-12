@@ -89,7 +89,8 @@ fi
 
 # pacman (default via yay)
 if (( $+commands[yay] )); then
-  sudo yay -Syu
+  # user must have write permision to current directory for aur to work 
+  yay -Syu
 elif (( $+commands[pacman] )); then
   sudo pacman -Syu
 fi
