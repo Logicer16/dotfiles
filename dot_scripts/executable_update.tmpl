@@ -129,8 +129,13 @@ if (( $+commands[gem] )); then
     sudo -H gem update -n /usr/local/bin openssl -- --with-openssl-dir="$(brew --prefix openssl@1.1)" # https://github.com/ruby/openssl/issues/385
   fi
 {{ end }}
-  sudo gem update
-  sudo gem cleanup
+  gem update
+  gem cleanup
+  # also do root
+  if [ "$EUID" -eq 0 ]; then
+    sudo gem update
+    sudo gem cleanup
+  fi
 fi
 
 # chezmoi
