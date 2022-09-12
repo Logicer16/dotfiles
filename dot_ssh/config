@@ -30,3 +30,7 @@ host oracle-server-x64-1
 host oracle-server-x64-2
   HostName 130.162.192.99
   User opc
+
+host manjaroUSB
+  HostName manjaroUSB.local
+  User jamesross
