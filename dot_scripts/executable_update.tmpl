@@ -132,7 +132,7 @@ if (( $+commands[gem] )); then
   gem update
   gem cleanup
   # also do root
-  if [ "$EUID" -eq 0 ]; then
+  if [ "$EUID" -ne 0 ]; then
     sudo gem update
     sudo gem cleanup
   fi
