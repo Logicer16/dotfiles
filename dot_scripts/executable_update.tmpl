@@ -36,9 +36,11 @@ if (( $+commands[brew] )); then
   # Relinking if required
 
 {{ if eq .chezmoi.os "darwin" }}
-  # Java
-  if [ "$(readlink -- "/Library/Java/JavaVirtualMachines/openjdk.jdk")" != /usr/local/opt/openjdk/libexec/openjdk.jdk ] && [ -f /usr/local/opt/openjdk/libexec/openjdk.jdk]; then
-    sudo -- ln -sfn /usr/local/opt/openjdk/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/
+  # openjdk
+  if (brew list -1 | grep openjdk); then
+    for jdk in $(ls /usr/local/opt/ | grep openjdk); do
+      sudo -- ln -sfn /usr/local/opt/$jdk/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/$jdk.jdk
+    done
   fi
 {{ end }}
 fi
