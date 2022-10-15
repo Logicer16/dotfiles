@@ -113,6 +113,5 @@ alias ehco="echo"
 # Watch update frequency
 export WATCH_INTERVAL=0.2
 
-# Initialise completions
-rm -f ~/.zcompdump
-compinit
+# Ignore completion cache
+zstyle ":completion:*:commands" rehash 1

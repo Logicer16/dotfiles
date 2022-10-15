@@ -3,7 +3,7 @@
 if (( $+commands[brew] )); then
   # Get values
   values=()
-  for string in $(brew list -1 | grep python@3.); do
+  for string in $(ls /usr/local/opt/ | grep python@3.); do
     [[ $string =~ 'python@3.([0-9]+)' ]]
     values+=$match
   done
