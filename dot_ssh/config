@@ -12,7 +12,7 @@ Host pi
   User jamesross
 
 host google-server
-  HostName 35.208.173.23
+  HostName 34.172.134.249
   User jamesross
 
 host oracle-server-arm
