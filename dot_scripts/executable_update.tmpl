@@ -18,9 +18,17 @@ done
   fi
 {{ end }}
 
-# Maintain sudo
-sudo -v
-while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done &> /dev/null &
+# Manage root user
+if (( $+commands[doas] )); then
+  rootcmd=doas
+elif (( $+commands[sudo] )); then
+  sudo -v
+  while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done &> /dev/null &
+  rootcmd=sudo
+elif [ "$EUID" -ne 0 ]; then
+  echo "I'm not sure how you expect to run this script without sudo"
+fi
+usercmd="$rootcmd -u $(logname)"
 
 # Run in home folder
 ( cd ~
@@ -28,10 +36,10 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done &> /dev/null &
 # Brew
 if (( $+commands[brew] )); then
   # brew cannot run as root
-  sudo -u $(logname) brew update
-  sudo -u $(logname) brew upgrade --greedy
-  sudo -u $(logname) brew autoremove
-  sudo -u $(logname) brew cleanup
+  eval $usercmd brew update
+  eval $usercmd brew upgrade --greedy
+  eval $usercmd brew autoremove
+  eval $usercmd brew cleanup
 
   # Relinking if required
 
@@ -39,7 +47,7 @@ if (( $+commands[brew] )); then
   # openjdk
   if (brew list -1 | grep openjdk); then
     for jdk in $(ls /usr/local/opt/ | grep openjdk); do
-      sudo -- ln -sfn /usr/local/opt/$jdk/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/$jdk.jdk
+      eval $rootcmd ln -sfn /usr/local/opt/$jdk/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/$jdk.jdk
     done
   fi
 {{ end }}
@@ -55,11 +63,11 @@ softwareupdate --install -a --agree-to-license
 
 # apt (debian)
 if (( $+commands[apt-get] )); then
-  sudo apt-get -y update
-  sudo apt-get -y dist-upgrade
-  sudo apt-get -y check
-  sudo apt-get -y autoremove
-  sudo apt-get -y autoclean
+  eval $rootcmd apt-get -y update
+  eval $rootcmd apt-get -y dist-upgrade
+  eval $rootcmd apt-get -y check
+  eval $rootcmd apt-get -y autoremove
+  eval $rootcmd apt-get -y autoclean
 fi
 
 # Not sure if this works
@@ -70,23 +78,23 @@ fi
 
 # snaps (piece of shit)
 if (( $+commands[snap] )); then
-  sudo snap refresh
+  eval $rootcmd snap refresh
 fi
 
 # flatpaks (the other piece of shit)
 if (( $+commands[flatpak] )); then
-  sudo flatpak update -y
+  eval $rootcmd flatpak update -y
 fi
 
 # dnf/yum (i.e. redhat-based package managers)
 if (( $+commands[dnf] )); then
-  sudo dnf -y upgrade
-  sudo dnf -y check
-  sudo dnf -y autoremove
+  eval $rootcmd dnf -y upgrade
+  eval $rootcmd dnf -y check
+  eval $rootcmd dnf -y autoremove
 elif (( $+commands[yum] )); then
-  sudo yum -y upgrade
-  sudo yum -y check
-  sudo yum -y autoremove
+  eval $rootcmd yum -y upgrade
+  eval $rootcmd yum -y check
+  eval $rootcmd yum -y autoremove
 fi
 
 # pacman (default via yay)
@@ -97,9 +105,9 @@ if (( $+commands[yay] )); then
   # remove orphaned packages
   yay -Qtdp | yay -Rns - &> /dev/null || :
 elif (( $+commands[pacman] )); then
-  sudo pacman -Syu
+  eval $rootcmd pacman -Syu
   # remove orphaned packages
-  sudo pacman -Qtdp | sudo pacman -Rns - &> /dev/null || :
+  eval $rootcmd pacman -Qtdp | eval $rootcmd pacman -Rns - &> /dev/null || :
 fi
 
 # python
@@ -107,8 +115,8 @@ if (( $+commands[python] )); then
   # pip
   python -c "import pip" &> /dev/null
   if [ $? -eq 0 ]; then
-    sudo -u $(logname) python -m pip list --outdated --not-required | cut -f1 -d' ' | tr " " "\n" | awk '{if(NR>=3)print}' | cut -d' ' -f1 | xargs -n1 sudo -u $(logname) python -m pip install -U
-    sudo -u $(logname) python -m pip check
+    eval $usercmd python -m pip list --outdated --not-required | cut -f1 -d' ' | tr " " "\n" | awk '{if(NR>=3)print}' | cut -d' ' -f1 | xargs -n1 eval $usercmd python -m pip install -U
+    eval $usercmd python -m pip check
   fi
 fi
 
@@ -120,7 +128,7 @@ fi
 
 # npm
 if (( $+commands[npm] )); then
-  sudo -u $(logname) npm update
+  eval $usercmd npm update
   npm update --location=global
 fi
 
@@ -133,15 +141,15 @@ done
 if (( $+commands[gem] )); then
 {{ if eq .chezmoi.os "darwin" }}
   if (( $+commands[brew] )); then
-    sudo -H gem update -n /usr/local/bin openssl -- --with-openssl-dir="$(brew --prefix openssl@1.1)" # https://github.com/ruby/openssl/issues/385
+    eval $rootcmd -H gem update -n /usr/local/bin openssl -- --with-openssl-dir="$(brew --prefix openssl@1.1)" # https://github.com/ruby/openssl/issues/385
   fi
 {{ end }}
   gem update
   gem cleanup
   # also do root
   if [ "$EUID" -ne 0 ]; then
-    sudo gem update
-    sudo gem cleanup
+    eval $rootcmd gem update
+    eval $rootcmd gem cleanup
   fi
 fi
 
@@ -157,7 +165,7 @@ if [ -f /var/run/reboot-required ]; then
   if $no_restart; then
     echo "A Reboot is Required"
   else
-    sudo reboot
+    eval $rootcmd reboot
   fi
 fi
 
