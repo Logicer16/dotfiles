@@ -55,7 +55,9 @@ fi
 
 {{ if eq .chezmoi.os "darwin" }}
 # mac App Store
-mas upgrade
+if (( $+commands[brew] )); then
+  mas upgrade
+fi
 
 # mac software update
 softwareupdate --install -a --agree-to-license
