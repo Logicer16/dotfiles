@@ -1,5 +1,7 @@
 Host *
+{{ if eq .chezmoi.os "darwin" }}
   UseKeychain yes
+{{ end }}
   AddKeysToAgent yes
   IdentityFile ~/.ssh/id_rsa
 
