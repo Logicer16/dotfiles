@@ -117,7 +117,7 @@ if (( $+commands[python] )); then
   # pip
   python -c "import pip" &> /dev/null
   if [ $? -eq 0 ]; then
-    eval $usercmd python -m pip list --outdated --not-required | cut -f1 -d' ' | tr " " "\n" | awk '{if(NR>=3)print}' | cut -d' ' -f1 | xargs -n1 eval $usercmd python -m pip install -U
+    eval $usercmd python -m pip list --outdated --not-required | cut -f1 -d' ' | tr " " "\n" | awk '{if(NR>=3)print}' | cut -d' ' -f1 | eval $usercmd xargs -n1 python -m pip install -U
     eval $usercmd python -m pip check
   fi
 fi
