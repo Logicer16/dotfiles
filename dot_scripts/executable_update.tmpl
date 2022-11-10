@@ -19,9 +19,9 @@ done
 {{ end }}
 
 # Manage root user
-if (( $+commands[doas] )); then
+if type doas &>/dev/null; then
   rootcmd=doas
-elif (( $+commands[sudo] )); then
+elif type sudo &>/dev/null; then
   sudo -v
   while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done &> /dev/null &
   rootcmd=sudo
@@ -34,7 +34,7 @@ usercmd="$rootcmd -u $(logname)"
 ( cd ~
 
 # Brew
-if (( $+commands[brew] )); then
+if type brew &>/dev/null; then
   # brew cannot run as root
   eval $usercmd brew update
   eval $usercmd brew upgrade --greedy
@@ -55,7 +55,7 @@ fi
 
 {{ if eq .chezmoi.os "darwin" }}
 # mac App Store
-if (( $+commands[brew] )); then
+if type brew &>/dev/null; then
   mas upgrade
 fi
 
@@ -64,7 +64,7 @@ softwareupdate --install -a --agree-to-license
 {{ end }}
 
 # apt (debian)
-if (( $+commands[apt-get] )); then
+if type apt-get &>/dev/null; then
   eval $rootcmd apt-get -y update
   eval $rootcmd apt-get -y dist-upgrade
   eval $rootcmd apt-get -y check
@@ -74,46 +74,46 @@ fi
 
 # Not sure if this works
 # # ubuntu 
-# if (( $+commands[do-release-upgrade] )); then
+# if type do-release-upgrade &>/dev/null; then
 #   do-release-upgrade
 # fi
 
 # snaps (piece of shit)
-if (( $+commands[snap] )); then
+if type snap &>/dev/null; then
   eval $rootcmd snap refresh
 fi
 
 # flatpaks (the other piece of shit)
-if (( $+commands[flatpak] )); then
+if type flatpak &>/dev/null; then
   eval $rootcmd flatpak update -y
 fi
 
 # dnf/yum (i.e. redhat-based package managers)
-if (( $+commands[dnf] )); then
+if type dnf &>/dev/null; then
   eval $rootcmd dnf -y upgrade
   eval $rootcmd dnf -y check
   eval $rootcmd dnf -y autoremove
-elif (( $+commands[yum] )); then
+elif type yum &>/dev/null; then
   eval $rootcmd yum -y upgrade
   eval $rootcmd yum -y check
   eval $rootcmd yum -y autoremove
 fi
 
 # pacman (default via yay)
-if (( $+commands[yay] )); then
+if type yay &>/dev/null; then
   # user must have write permision to current directory for aur to work 
   # ... which is the home directory so it's a bit sus if they don't
   yay -Syu
   # remove orphaned packages
   yay -Qtdp | yay -Rns - &> /dev/null || :
-elif (( $+commands[pacman] )); then
+elif type pacman &>/dev/null; then
   eval $rootcmd pacman -Syu
   # remove orphaned packages
   eval $rootcmd pacman -Qtdp | eval $rootcmd pacman -Rns - &> /dev/null || :
 fi
 
 # python
-if (( $+commands[python] )); then
+if type python &>/dev/null; then
   # pip
   python -c "import pip" &> /dev/null
   if [ $? -eq 0 ]; then
@@ -123,13 +123,18 @@ if (( $+commands[python] )); then
 fi
 
 # nvm
-if (( $+commands[nvm] )); then
+# must be reloaded
+export NVM_DIR="$HOME/.nvm"
+NVM_PATH=$($HOME/.scripts/nvm_dir)
+[ -s "$NVM_PATH/nvm.sh" ] && \. "$NVM_PATH/nvm.sh"
+
+if type nvm &>/dev/null; then
   nvm install node --reinstall-packages-from=node # Upgrade node version
-  nvm install "*/lts" # Upgrade lts node version
+  nvm install --lts # Upgrade lts node version
 fi
 
 # npm
-if (( $+commands[npm] )); then
+if type npm &>/dev/null; then
   eval $usercmd npm update
   npm update --location=global
 fi
@@ -140,9 +145,9 @@ for GIT_UPDATE_FOLDER in $GIT_UPDATE_FOLDERS; do
 done
 
 # gem
-if (( $+commands[gem] )); then
+if type gem &>/dev/null; then
 {{ if eq .chezmoi.os "darwin" }}
-  if (( $+commands[brew] )); then
+  if type brew &>/dev/null; then
     eval $rootcmd -H gem update -n /usr/local/bin openssl -- --with-openssl-dir="$(brew --prefix openssl@1.1)" # https://github.com/ruby/openssl/issues/385
   fi
 {{ end }}
@@ -156,7 +161,7 @@ if (( $+commands[gem] )); then
 fi
 
 # chezmoi
-if (( $+commands[chezmoi] )); then
+if type chezmoi &>/dev/null; then
   chezmoi update
 fi
 

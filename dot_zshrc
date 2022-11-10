@@ -46,7 +46,7 @@ DISABLE_AUTO_UPDATE=true
 # output after 'AUTORUN'.
 plugins=(git zsh-better-npm-completion zsh-completions zsh-syntax-highlighting)
 
-if (( $+commands[brew] )); then
+if type brew &>/dev/null; then
   FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
 fi
 
@@ -55,7 +55,7 @@ $HOME/.scripts:\
 $HOME/bin:\
 $PATH"
 
-if (( $+commands[brew] )); then
+if type brew &>/dev/null; then
   # Add python, make, Ruby, cURL, Homebrew's "sbin" to PATH
   export PATH="\
 /usr/local/opt/$($HOME/.scripts/get_newest_python)/libexec/bin:\
@@ -88,18 +88,20 @@ bindkey "${key[Down]}" down-line-or-beginning-search
 
 # nvm
 export NVM_DIR="$HOME/.nvm"
-[ -s "/usr/local/opt/nvm/nvm.sh" ] && \. "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
-[ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+NVM_PATH=$($HOME/.scripts/nvm_dir)
+[ -s "$NVM_PATH/nvm.sh" ] && \. "$NVM_PATH/nvm.sh"  # This loads nvm
+# bash completion not needed in .zshrc
+# [ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 
 # Additional completions
-(( $+commands[npm] )) && source <(npm completion)
-(( $+commands[pip] )) && source <(pip completion --zsh)
+type npm &>/dev/null && source <(npm completion)
+type pip &>/dev/null && source <(pip completion --zsh)
 
 GIT_UPDATE_FOLDERS=(  )
 
 export MANPATH="/usr/local/man:$MANPATH"
 export LESS="-R"
-if (( $+commands[code] )); then
+if type code &>/dev/null; then
   export VISUAL="/usr/bin/env code --wait --new-window"
 else
   export EDITOR="/usr/bin/env nano"

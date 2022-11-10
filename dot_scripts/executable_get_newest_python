@@ -1,6 +1,6 @@
 #! /usr/bin/env zsh
 
-if (( $+commands[brew] )); then
+if type brew &>/dev/null; then
   # Get values
   values=()
   for string in $(ls /usr/local/opt/ | grep python@3.); do

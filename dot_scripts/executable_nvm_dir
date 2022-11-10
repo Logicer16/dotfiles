@@ -1,0 +1,7 @@
+#! /usr/bin/env zsh
+
+if type brew &>/dev/null && ls /usr/local/opt/ | grep -q nvm; then
+  echo "/usr/local/opt/nvm"
+else
+  echo $NVM_DIR
+fi
