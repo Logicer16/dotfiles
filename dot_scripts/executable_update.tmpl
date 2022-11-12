@@ -105,11 +105,11 @@ if type yay &>/dev/null; then
   # ... which is the home directory so it's a bit sus if they don't
   yay -Syu
   # remove orphaned packages
-  yay -Qtdp | yay -Rns - &> /dev/null || :
+  yay -Qtdp &> /dev/null | yay -Rns - &> /dev/null || :
 elif type pacman &>/dev/null; then
   eval $rootcmd pacman -Syu
   # remove orphaned packages
-  eval $rootcmd pacman -Qtdp | eval $rootcmd pacman -Rns - &> /dev/null || :
+  eval $rootcmd pacman -Qtdp &> /dev/null | eval $rootcmd pacman -Rns - &> /dev/null || :
 fi
 
 # python
