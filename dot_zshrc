@@ -115,5 +115,8 @@ alias ehco="echo"
 # Watch update frequency
 export WATCH_INTERVAL=0.2
 
+# Homebrew update frequency
+export HOMEBREW_AUTO_UPDATE_SECS="300" # 5 minutes
+
 # Ignore completion cache
 zstyle ":completion:*:commands" rehash 1
