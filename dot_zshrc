@@ -104,7 +104,7 @@ export LESS="-R"
 if type code &>/dev/null; then
   export VISUAL="/usr/bin/env code --wait --new-window"
 fi
-if nvim &>/dev/null; then
+if type nvim &>/dev/null; then
   export EDITOR="/usr/bin/env nvim"
 fi
 
