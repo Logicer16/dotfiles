@@ -58,7 +58,7 @@ $PATH"
 if type brew &>/dev/null; then
   # Add python, make, Ruby, cURL, Homebrew's "sbin" to PATH
   export PATH="\
-/usr/local/opt/$($HOME/.scripts/get_newest_python)/libexec/bin:\
+/usr/local/opt/$($HOME/.scripts/posix/get_newest_python)/libexec/bin:\
 /usr/local/opt/make/libexec/gnubin:\
 /usr/local/opt/ruby/bin:\
 /usr/local/opt/curl/bin:\
@@ -88,7 +88,7 @@ bindkey "${key[Down]}" down-line-or-beginning-search
 
 # nvm
 export NVM_DIR="$HOME/.nvm"
-NVM_PATH=$($HOME/.scripts/nvm_dir)
+NVM_PATH=$($HOME/.scripts/posix/nvm_dir)
 [ -s "$NVM_PATH/nvm.sh" ] && \. "$NVM_PATH/nvm.sh"  # This loads nvm
 # bash completion not needed in .zshrc
 # [ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
