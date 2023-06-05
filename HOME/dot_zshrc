@@ -44,7 +44,7 @@ DISABLE_AUTO_UPDATE=true
 # Add wisely, as too many plugins slow down shell startup.
 # Add plugins with output before 'AUTORUN' and plugins without
 # output after 'AUTORUN'.
-plugins=(git zsh-better-npm-completion zsh-completions zsh-syntax-highlighting)
+plugins=(zsh-better-npm-completion zsh-completions zsh-syntax-highlighting)
 
 if type brew &>/dev/null; then
   FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
@@ -96,6 +96,7 @@ NVM_PATH=$($HOME/.scripts/posix/nvm_dir)
 # Additional completions
 type npm &>/dev/null && source <(npm completion)
 type pip &>/dev/null && source <(pip completion --zsh)
+type docker &>/dev/null && source <(docker completion zsh)
 
 GIT_UPDATE_FOLDERS=(  )
 
