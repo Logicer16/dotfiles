@@ -78,16 +78,6 @@ fi
 #   do-release-upgrade
 # fi
 
-# snaps (piece of shit)
-if type snap &>/dev/null; then
-  eval $rootcmd snap refresh
-fi
-
-# flatpaks (the other piece of shit)
-if type flatpak &>/dev/null; then
-  eval $rootcmd flatpak update -y
-fi
-
 # dnf/yum (i.e. redhat-based package managers)
 if type dnf &>/dev/null; then
   eval $rootcmd dnf -y upgrade
@@ -110,6 +100,16 @@ elif type pacman &>/dev/null; then
   eval $rootcmd pacman -Syu
   # remove orphaned packages
   eval $rootcmd pacman -Qtdp &> /dev/null | eval $rootcmd pacman -Rns - &> /dev/null || :
+fi
+
+# snaps
+if type snap &>/dev/null; then
+  eval $rootcmd snap refresh
+fi
+
+# flatpaks
+if type flatpak &>/dev/null; then
+  eval $rootcmd flatpak update -y
 fi
 
 # python
