@@ -1,9 +1,11 @@
 # Logicer's Dotfiles
 My poor taste in configuration, managed with the help of [chezmoi](https://github.com/twpayne/chezmoi).
 
-<!--
-Quick Start:
+### Quick Start
 ```
-chezmoi init --apply https://github.com/username/dotfiles.git
+/bin/sh -c "$(curl -fsSL https://github.com/Logicer16/dotfiles/raw/main/install.sh)"
 ```
--->
+or, for `wget`:
+```
+/bin/sh -c "$(wget -qO- https://github.com/Logicer16/dotfiles/raw/main/install.sh)"
+```

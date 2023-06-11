@@ -2,18 +2,16 @@
 
 set -e # -e: exit on error
 
-print_usage() {
-  return "`basename $0`:usage: [-s|-l] [-h]
+usage="Usage: `basename $0` [-s|-l] [-h]
 Install source:
-Default: decided automatically 
+Default: decided automatically
   -c, --clone: clone from GitHub
-  -l, --local: install from the script's directory"
-}
+  -l, --local: install from the script's directory\n"
 
 # Get args
 # Compounded options (i.e. -abc) would require a special case
 for i in $@; do
-  arg=`echo $i | tr "[:lower:]"`
+  arg=`echo $i | tr "[:upper:]" "[:lower:]"`
   case $arg in
 
    -c | --clone )
@@ -32,14 +30,14 @@ for i in $@; do
       arg_source=local
       ;;
 
-   -h)
-      echo "POSIX install script for logicer's dotfiles.\nLearn more: https://github.com/Logicer16/dotfiles\n"
-      echo `usage()`
+   -h )
+      printf "POSIX install script for logicer's dotfiles.\nLearn more: https://github.com/Logicer16/dotfiles\n\n"
+      printf "$usage"
       exit 0
       ;;
 
-   *)  
-      echo `usage()` >&2
+   * )  
+      printf "$usage" >&2
       exit 1
       ;;
 
@@ -63,18 +61,19 @@ else
 fi
 
 # Decide source
-if $arg_source; then
+if [[ $arg_source != "clone" ]]; then
   # POSIX way to get script's dir: https://stackoverflow.com/a/29834779/12156188
   # Looks like garbage but blame the bourne shell's syntax for not having $()
   script_dir="`cd -P -- \"\`dirname -- \\\"\\\`command -v -- \\\\\"$0\\\\\"\\\`\\\"\`\" && pwd -P`"
-  echo `$chezmoi git -S $script_dir -- config --get remote.origin.url`
-  if [[ `$chezmoi git -S $script_dir -- config --get remote.origin.url` == "https://github.com/Logicer16/dotfiles.git" ]] && [[ $arg_source != "clone" ]]; then
+  # Check if in a git repo and if it's the right git repo
+  git_url="`$chezmoi git -S $script_dir -- config --get remote.origin.url 2> /dev/null | tr "[:upper:]" "[:lower:]" || true`"
+  if [ ! -z $git_url ] && [[ $git_url == "https://github.com/logicer16/dotfiles.git" ]]; then
     # update git repo
     $chezmoi git -S $script_dir -- pull
     source="--source=$script_dir"
   else
     if [[ $arg_source == "local" ]]; then
-      echo "error: not in git repository" >&2
+      echo "error: not in valid git repository" >&2
       exit 1
     fi
   fi
