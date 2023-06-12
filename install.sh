@@ -67,7 +67,11 @@ if [ "$arg_source" != "clone" ]; then
   script_dir="`cd -P -- \"\`dirname -- \\\"\\\`command -v -- \\\\\"$0\\\\\"\\\`\\\"\`\" && pwd -P`"
   # Check if in a git repo and if it's the right git repo
   git_url="`$chezmoi git -S $script_dir -- config --get remote.origin.url 2> /dev/null | tr "[:upper:]" "[:lower:]" || true`"
-  if [ "$git_url" = "https://github.com/logicer16/dotfiles.git" ]; then
+  # Remove the ".git" suffix, if present
+  if echo $git_url | grep -q "\.git"; then
+    git_url=`echo $git_url | sed 's/\(.*\)\(\.git\)/\1/'`
+  fi
+  if [ "${git_url%.git}" = "https://github.com/logicer16/dotfiles" ]; then
     # update git repo
     $chezmoi git -S $script_dir -- pull
     source="--source=$script_dir"
