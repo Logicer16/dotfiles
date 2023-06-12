@@ -1,3 +1,6 @@
+{{- $unattended:= env "UNATTENDED" | not | not -}}
+sourceDir = {{ .chezmoi.sourceDir | quote }}
+
 mode = "symlink"
 [diff]
     exclude = ["scripts"]
