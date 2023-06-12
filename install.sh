@@ -61,18 +61,18 @@ else
 fi
 
 # Decide source
-if [[ $arg_source != "clone" ]]; then
+if [ "$arg_source" != "clone" ]; then
   # POSIX way to get script's dir: https://stackoverflow.com/a/29834779/12156188
   # Looks like garbage but blame the bourne shell's syntax for not having $()
   script_dir="`cd -P -- \"\`dirname -- \\\"\\\`command -v -- \\\\\"$0\\\\\"\\\`\\\"\`\" && pwd -P`"
   # Check if in a git repo and if it's the right git repo
   git_url="`$chezmoi git -S $script_dir -- config --get remote.origin.url 2> /dev/null | tr "[:upper:]" "[:lower:]" || true`"
-  if [ ! -z $git_url ] && [[ $git_url == "https://github.com/logicer16/dotfiles.git" ]]; then
+  if [ "$git_url" = "https://github.com/logicer16/dotfiles.git" ]; then
     # update git repo
     $chezmoi git -S $script_dir -- pull
     source="--source=$script_dir"
   else
-    if [[ $arg_source == "local" ]]; then
+    if [ "$arg_source" = "local" ]; then
       echo "error: not in valid git repository" >&2
       exit 1
     fi
