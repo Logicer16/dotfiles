@@ -100,6 +100,7 @@
     vim_shell               # vim shell indicator (:sh)
     midnight_commander      # midnight commander shell (https://midnight-commander.org/)
     nix_shell               # nix shell (https://nixos.org/nixos/nix-pills/developing-with-nix-shell.html)
+    chezmoi_shell           # chezmoi shell (https://www.chezmoi.io/)
     vi_mode                 # vi mode (you don't need this if you've enabled prompt_char)
     # vpn_ip                # virtual private network indicator
     # load                  # CPU load
@@ -773,6 +774,13 @@
   typeset -g POWERLEVEL9K_XPLR_BACKGROUND=6
   # Custom icon.
   # typeset -g POWERLEVEL9K_XPLR_VISUAL_IDENTIFIER_EXPANSION='⭐'
+
+  ##################[ chezmoi: chezmoi shell (https://github.com/twpayne/chezmoi) ]##################
+  # chezmoi shell color.
+  typeset -g POWERLEVEL9K_CHEZMOI_SHELL_FOREGROUND=0
+  typeset -g POWERLEVEL9K_CHEZMOI_SHELL_BACKGROUND=6
+  # Custom icon.
+  # typeset -g POWERLEVEL9K_CHEZMOI_VISUAL_IDENTIFIER_EXPANSION='⭐'
 
   ###########################[ vim_shell: vim shell indicator (:sh) ]###########################
   # Vim shell indicator color.
