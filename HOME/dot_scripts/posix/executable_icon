@@ -1,0 +1,86 @@
+#! /bin/sh
+
+# checks if the terminal supports a colour (256 colour only)
+testColour() {
+  printf '\e]4;%d;?\a' $1
+  read -d $'\a' -s -t 1
+}
+
+# replaceCharWithKeyRange [string] [char] [key]
+replaceCharWithKeyRange() {
+  echo "$1" | sed -e "s/$2/$3 /g" | sed -e "s/ $3/,/g" | sed -e "s/, /,,/g"
+}
+
+convertToColoured() {
+  while IFS= read -r LINE
+  do
+    a="$(replaceCharWithKeyRange "$LINE" " " "S")"
+    b="$(replaceCharWithKeyRange "$a" "\\." "g")"
+    c="$(replaceCharWithKeyRange "$b" "#" "B")"
+    d="$(echo "$c" | sed -e "s/,/ /g")"
+    e="$(echo "$d" | sed -e "s/^S//g")"
+    f="$(echo "$e" | sed -e "s/B/${BLK}/g")"
+    g="$(echo "$f" | sed -e "s/g/${GRN}/g")"
+    h="$(echo "$g" | sed -e "s/S/${RST}/g")"
+    printf '%s\n' "$h"
+  done <<EOF
+$1
+EOF
+}
+
+convertToMonochrome() {
+  while IFS= read -r LINE
+  do
+    printf '%s\n' "$(echo "$LINE" | sed -e "s/\./ /g" | sed -e "s/#/█/g")"
+  done <<EOF
+$1
+EOF
+}
+
+iconStructure=$(cat << EOF
+                                
+          ############          
+      ####............####      
+    ##....................##    
+    ##....................##    
+  ##........................##  
+  ##....####........####....##  
+  ##....####........####....##  
+  ##....####........####....##  
+  ##....####........####....##  
+  ##........................##  
+    ##....................##    
+    ##....................##    
+    ##......########......##    
+      ######        ######      
+                                \n
+EOF
+)
+
+if [ "$COLORTERM" = "truecolor" ] || [ "$COLORTERM" = "24bit" ]; then
+  # truecolor (24-bit rgb) support
+  R=85
+  G=137
+  B=47
+  GRN="\\\\033[48;2;${R};${G};${B}m" # Green
+  BLK="\\\\033[0;40m" # Black
+  RST="\\\\033[0m" # Reset formatting
+  parsedIcon=$(convertToColoured "$iconStructure")
+elif testColour 255; then
+  # 256 colour
+  GRN="\\\\033[48;5;028m" # Green
+  BLK="\\\\033[0;40m" # Black
+  RST="\\\\033[0m" # Reset formatting
+  parsedIcon=$(convertToColoured "$iconStructure")
+elif [ ! -z "$TERM" ]; then
+  # 16 colour
+  GRN="\\\\033[0;42m" # Green
+  BLK="\\\\033[0;40m" # Black
+  RST="\\\\033[0m" # Reset formatting
+  parsedIcon=$(convertToColoured "$iconStructure")
+else
+  # no colour support
+  parsedIcon=$(convertToMonochrome "$iconStructure")
+fi
+
+printf "$parsedIcon\n"
