@@ -1,8 +1,8 @@
 Host *
-{{ if eq .chezmoi.os "darwin" }}
+  AddKeysToAgent yes
+{{- if eq .chezmoi.os "darwin" }}
   UseKeychain yes
 {{ end }}
-  AddKeysToAgent yes
 
 Host ubuntuvm
   HostName ubuntu-vm.local
