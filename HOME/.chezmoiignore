@@ -6,7 +6,6 @@
 {{ if ne .chezmoi.os "windows" }}
 .chezmoiscripts/windows/**
 .scripts/windows
-Documents/WindowsPowerShell/Microsoft.PowerShell_profile.ps1
 .oh-my-zsh/cache/**
 .oh-my-zsh/custom/themes/powerlevel10k/**/*.zwc
 {{ end }}
@@ -19,4 +18,11 @@ Documents/WindowsPowerShell/Microsoft.PowerShell_profile.ps1
 .oh-my-zsh/**
 .p10k.zsh
 .zshrc
+{{ end }}
+
+# Powershell
+{{ if eq .chezmoi.os "windows" }}
+~/.config/powershell/profile.ps1
+{{ else }}
+Documents/PowerShell/Profile.ps1
 {{ end }}
