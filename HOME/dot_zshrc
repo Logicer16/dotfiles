@@ -120,6 +120,8 @@ fi
 alias mkdir="mkdir -p"
 # I'm hopeless
 alias ehco="echo"
+# No copyright statement on startup
+alias pwsh="pwsh -NoLogo"
 
 # Watch update frequency
 export WATCH_INTERVAL=0.2

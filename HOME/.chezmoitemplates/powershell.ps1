@@ -1,7 +1,7 @@
 using namespace System.Management.Automation
 using namespace System.Management.Automation.Language
   
-$env:Path += ";$env:UserProfile\.scripts\windows"
+$env:PATH = "$env:UserProfile\.scripts\windows" + [IO.Path]::PathSeparator + $env:PATH
 
 New-Alias which get-command
 
