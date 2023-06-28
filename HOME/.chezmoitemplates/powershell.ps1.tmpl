@@ -1,7 +1,11 @@
 using namespace System.Management.Automation
 using namespace System.Management.Automation.Language
-  
+
+{{ if eq .chezmoi.os "windows" }}
 $env:PATH = "$env:UserProfile\.scripts\windows" + [IO.Path]::PathSeparator + $env:PATH
+{{ else }}
+Invoke-Expression "$HOME/.scripts/posix/icon"
+{{ end }}
 
 New-Alias which get-command
 
