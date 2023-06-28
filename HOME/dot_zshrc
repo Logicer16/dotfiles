@@ -52,6 +52,7 @@ if type brew &>/dev/null; then
   brewCompletionPath=$(brew --prefix)/share/zsh/site-functions
   FPATH="$brewCompletionPath:${FPATH}"
 fi
+FPATH="$HOME/.scripts/.completion/zsh:${FPATH}"
 
 export PATH="\
 $HOME/.scripts:\
@@ -100,10 +101,6 @@ NVM_PATH=$($HOME/.scripts/posix/nvm_dir)
 type npm &>/dev/null && source <(npm completion)
 type pip &>/dev/null && source <(pip completion --zsh)
 type docker &>/dev/null && source <(docker completion zsh)
-# Only source the chezmoi completion if brew hasn't already
-if [ -z "$brewCompletionPath" ] || [ ! -f "$brewCompletionPath/_chezmoi" ]; then
-  source <(chezmoi completion zsh)
-fi
 
 GIT_UPDATE_FOLDERS=(  )
 
