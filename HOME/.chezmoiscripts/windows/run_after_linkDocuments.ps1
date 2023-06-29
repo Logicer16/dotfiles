@@ -38,5 +38,5 @@ if (Get-Command "pwsh.exe" -ErrorAction SilentlyContinue) {
 }
 
 if (Get-Command "powershell.exe" -ErrorAction SilentlyContinue) {
-  New-Safe-Symlink (powershell.exe -c "`$PROFILE.CurrentUserAllHosts") "$HOME\Documents\PowerShell\Profile.ps1"
+  New-Safe-Symlink (powershell.exe -c "`$PROFILE.CurrentUserAllHosts") "$HOME\Documents\WindowsPowerShell\Profile.ps1"
 }

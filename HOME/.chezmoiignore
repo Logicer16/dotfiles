@@ -22,7 +22,8 @@
 
 # Powershell
 {{ if eq .chezmoi.os "windows" }}
-~/.config/powershell/profile.ps1
+.config/powershell/
 {{ else }}
-Documents/PowerShell/Profile.ps1
+Documents/PowerShell/
+Documents/WindowsPowerShell/
 {{ end }}
