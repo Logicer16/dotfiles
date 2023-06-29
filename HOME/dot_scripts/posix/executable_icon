@@ -12,20 +12,15 @@ replaceCharWithKeyRange() {
 }
 
 convertToColoured() {
-  while IFS= read -r LINE
-  do
-    a="$(replaceCharWithKeyRange "$LINE" " " "S")"
-    b="$(replaceCharWithKeyRange "$a" "\\." "g")"
-    c="$(replaceCharWithKeyRange "$b" "#" "B")"
-    d="$(echo "$c" | sed -e "s/,/ /g")"
-    e="$(echo "$d" | sed -e "s/^S//g")"
-    f="$(echo "$e" | sed -e "s/B/${BLK}/g")"
-    g="$(echo "$f" | sed -e "s/g/${GRN}/g")"
-    h="$(echo "$g" | sed -e "s/S/${RST}/g")"
-    printf '%s\n' "$h"
-  done <<EOF
-$1
-EOF
+  a="$(replaceCharWithKeyRange "$1" " " "S")"
+  b="$(replaceCharWithKeyRange "$a" "\\." "g")"
+  c="$(replaceCharWithKeyRange "$b" "#" "B" | \
+  sed -e "s/,/ /g" | \
+  sed -e "s/^S//g" | \
+  sed -e "s/B/${BLK}/g" | \
+  sed -e "s/g/${GRN}/g" | \
+  sed -e "s/S/${RST}/g")"
+  printf '%s\n' "$c"
 }
 
 convertToMonochrome() {
