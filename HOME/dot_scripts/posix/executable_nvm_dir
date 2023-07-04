@@ -1,7 +1,8 @@
 #! /usr/bin/env zsh
 
-if type brew &>/dev/null && ls /usr/local/opt/ | grep -q nvm; then
-  echo "/usr/local/opt/nvm"
+# Ideally should be using `brew --prefix nvm` but is far too slow (1.8s) if not installed
+if type brew &>/dev/null && ls $(brew --prefix)/opt/ | grep -q nvm; then
+  echo "$(brew --prefix)/opt/nvm"
 else
   echo $NVM_DIR
 fi
