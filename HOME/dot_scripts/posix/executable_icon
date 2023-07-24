@@ -1,9 +1,11 @@
 #! /bin/sh
 
-# checks if the terminal supports a colour (256 colour only)
+# checks if the terminal supports 256 colour
 testColour() {
-  printf '\e]4;%d;?\a' $1
-  read -d $'\a' -s -t 1
+  case "$TERM" in
+    *"256"*) return 0 ;;
+    *) return 1 ;;
+  esac
 }
 
 # replaceCharWithKeyRange [string] [char] [key]
