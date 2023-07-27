@@ -7,8 +7,8 @@
 	clean = git-lfs clean -- %f
 [user]
 	name = Logicer
-	email = 81077770+Logicer16@users.noreply.github.com
+	email = logicer@logicer.cc
 [init]
 	defaultBranch = main
 [include]
-  path = credential
+	path = credential
