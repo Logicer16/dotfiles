@@ -11,4 +11,5 @@
 [init]
 	defaultBranch = main
 [include]
-	path = credential
+	path = credential-config
+  path = signing-config
