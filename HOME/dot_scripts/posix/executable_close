@@ -1,0 +1,80 @@
+#!/usr/bin/env zsh
+
+if [[ $1 == "-h" ]]; then
+  echo "Exits and closes the current shell. If on macOS, it will also close the tab if it's a login shell"
+  exit
+fi
+
+getPPID() {
+  echo $(ps -p $1 -o ppid=)
+}
+
+isLoginShell() {
+  SHELL_COMMAND=$(ps -p $1 -o args=)
+  [[ $SHELL_COMMAND == -* ]] || [[ $SHELL_COMMAND =~ [[:blank:]]-[0-9A-Za-z]*l ]]
+  return $?
+}
+
+PARENT_PID=$(getPPID $$)
+
+if type osascript &>/dev/null && isLoginShell $PARENT_PID; then
+  echo "Closing tab"
+
+  UNIQUE_ID="$$-$(head /dev/urandom | LC_ALL=C tr -dc 'A-Za-z0-9~_' | head -c16)"
+
+  # Set tab title to script's pid
+  printf "\e]2;$(echo "$UNIQUE_ID")\a"
+
+  # Must be done synchronously
+  getCurrentWindowID=$(cat <<EOF
+tell application "Terminal"
+  repeat with W in (a reference to windows)
+    set [W] to W
+    repeat with T in (tabs of W)
+      set [T] to T
+      if custom title of T = "$UNIQUE_ID" then
+        set L to id of W as text
+        log L
+      end if
+    end repeat
+  end repeat
+end tell
+
+EOF
+  )
+
+  IDs=$(osascript -e "$getCurrentWindowID" 2>&1)
+
+  # Must be done asynchronously and orphanned to avoid "are you sure" prompt due to the active task
+  closeWindows=$(cat <<-EOF
+
+set rawIDs to "$IDs"
+
+set oldDelimiter to AppleScript's text item delimiters
+set AppleScript's text item delimiters to "\n"
+set IDs to every text item of rawIDs
+set AppleScript's text item delimiters to oldDelimiter
+
+tell application "Terminal"
+  repeat with ID in IDs
+    close window id id
+  end repeat
+end tell
+
+EOF
+  )
+
+  osascript -e "$closeWindows" 2> /dev/null &
+  disown
+
+else
+  echo "Closing shell"
+  if isLoginShell $(getPPID $PARENT_PID); then
+    echo "Exiting to parent login shell"
+  else
+    echo "Exiting to parent shell"
+  fi
+fi
+
+# Exit from parent shell 
+kill -SIGHUP $PARENT_PID

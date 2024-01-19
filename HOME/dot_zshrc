@@ -60,7 +60,7 @@ fi
 FPATH="$HOME/.scripts/.completion/zsh:${FPATH}"
 
 export PATH="\
-$HOME/.scripts:\
+$HOME/.scripts/posix:\
 $HOME/bin:\
 $PATH"
 
