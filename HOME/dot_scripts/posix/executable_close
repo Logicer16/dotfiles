@@ -9,17 +9,23 @@ getPPID() {
   echo $(ps -p $1 -o ppid=)
 }
 
+PARENT_PID=$(getPPID $$)
+
 isLoginShell() {
   SHELL_PARENT_COMMAND=$(ps -p $(getPPID $1) -o args=)
   [[ $SHELL_PARENT_COMMAND == login* ]]
   return $?
 }
 
-PARENT_PID=$(getPPID $$)
+returnToParentMessage() {
+  echo "Closing shell"
+    echo "Exiting to parent shell"
+  if isLoginShell $(getPPID $PARENT_PID); then
+    echo "This is the topmost login shell"
+  fi
+}
 
 if type osascript &>/dev/null && isLoginShell $PARENT_PID; then
-  echo "Closing tab"
-
   UNIQUE_ID="$$-$(head /dev/urandom | LC_ALL=C tr -dc 'A-Za-z0-9~_' | head -c16)"
 
   # Set tab title to script's pid
@@ -45,6 +51,9 @@ EOF
 
   IDs=$(osascript -e "$getCurrentWindowID" 2>&1)
 
+  if [[ "$IDs" != "" ]]; then
+  echo "Closing tab"
+
   # Must be done asynchronously and orphanned to avoid "are you sure" prompt due to the active task
   closeWindows=$(cat <<-EOF
 
@@ -67,13 +76,11 @@ EOF
   osascript -e "$closeWindows" 2> /dev/null &
   disown
 
-else
-  echo "Closing shell"
-  if isLoginShell $(getPPID $PARENT_PID); then
-    echo "Exiting to parent login shell"
   else
-    echo "Exiting to parent shell"
+    returnToParentMessage
   fi
+else
+  returnToParentMessage
 fi
 
 # Exit from parent shell 
