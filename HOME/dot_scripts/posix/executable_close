@@ -10,8 +10,8 @@ getPPID() {
 }
 
 isLoginShell() {
-  SHELL_COMMAND=$(ps -p $1 -o args=)
-  [[ $SHELL_COMMAND == -* ]] || [[ $SHELL_COMMAND =~ [[:blank:]]-[0-9A-Za-z]*l ]]
+  SHELL_PARENT_COMMAND=$(ps -p $(getPPID $1) -o args=)
+  [[ $SHELL_PARENT_COMMAND == login* ]]
   return $?
 }
 
