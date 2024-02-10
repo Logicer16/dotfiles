@@ -2,7 +2,7 @@
 
 set -e # -e: exit on error
 
-usage="Usage: `basename $0` [-s|-l] [-h]
+usage="Usage: `basename $0` [-c|-l] [-h]
 Install source:
 Default: decided automatically
   -c, --clone: clone from GitHub
