@@ -75,6 +75,9 @@ if type brew &>/dev/null; then
 $PATH"
 fi
 
+# Special VS Code features
+[[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
+
 # Oh My Zsh Theme
 ZSH_THEME="powerlevel10k/powerlevel10k"
 
