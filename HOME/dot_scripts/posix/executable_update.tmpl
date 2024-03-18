@@ -12,7 +12,7 @@ done
 
 # Check for Apple Watch sudo
 {{ if eq .chezmoi.os "darwin" }}
-  if ! cat /etc/pam.d/sudo | grep "auth sufficient pam_watchid.so" &> /dev/null; then
+  if ! (cat /etc/pam.d/sudo | grep "auth sufficient pam_watchid.so" &> /dev/null || cat /etc/pam.d/sudo_local | grep "auth sufficient pam_watchid.so" &> /dev/null); then
     echo "Someone removed pam-watchid. Reinstalling..."
     bash -c "$(curl -fsSL https://raw.githubusercontent.com/logicer16/pam-watchid/HEAD/install.sh)" -- enable
   fi
