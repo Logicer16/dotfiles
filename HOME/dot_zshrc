@@ -53,19 +53,14 @@ DISABLE_AUTO_UPDATE=true
 # output after 'AUTORUN'.
 plugins=(zsh-better-npm-completion zsh-completions zsh-syntax-highlighting)
 
-if type brew &>/dev/null; then
-  brewCompletionPath=$(brew --prefix)/share/zsh/site-functions
-  FPATH="$brewCompletionPath:${FPATH}"
-fi
-FPATH="$HOME/.scripts/.completion/zsh:${FPATH}"
-
 export PATH="\
 $HOME/.scripts/posix:\
 $HOME/bin:\
+$HOME/.local/bin:\
 $PATH"
 
-if type brew &>/dev/null; then
-  # Add python, make, Ruby, cURL, Homebrew's "sbin" to PATH
+# Add python, make, Ruby, cURL, Homebrew's "sbin" to PATH
+if [ -f /usr/local/bin/brew ]; then
   export PATH="\
 /usr/local/opt/$($HOME/.scripts/posix/get_newest_python)/libexec/bin:\
 /usr/local/opt/make/libexec/gnubin:\
@@ -73,7 +68,22 @@ if type brew &>/dev/null; then
 /usr/local/opt/curl/bin:\
 /usr/local/sbin:\
 $PATH"
+elif [ -f /opt/homebrew/bin/brew ]; then
+export PATH="\
+/opt/homebrew/opt/$($HOME/.scripts/posix/get_newest_python)/libexec/bin:\
+/opt/homebrew/opt/make/libexec/gnubin:\
+/opt/homebrew/opt/ruby/bin:\
+/opt/homebrew/opt/curl/bin:\
+/opt/homebrew/sbin:\
+/opt/homebrew/bin:\
+$PATH"
 fi
+
+if type brew &>/dev/null; then
+  brewCompletionPath=$(brew --prefix)/share/zsh/site-functions
+  FPATH="$brewCompletionPath:${FPATH}"
+fi
+FPATH="$HOME/.scripts/.completion/zsh:${FPATH}"
 
 # Special VS Code features
 [[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
@@ -84,7 +94,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 source $ZSH/oh-my-zsh.sh
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
 
 # Options
 unsetopt LIST_BEEP
@@ -112,7 +122,7 @@ type docker &>/dev/null && source <(docker completion zsh)
 
 GIT_UPDATE_FOLDERS=(  )
 
-export MANPATH="/usr/local/man:$MANPATH"
+export MANPATH="/usr/local/man:/opt/homebrew/man:$MANPATH"
 export LESS="-R"
 if type code &>/dev/null; then
   export VISUAL="/usr/bin/env code --wait --new-window"

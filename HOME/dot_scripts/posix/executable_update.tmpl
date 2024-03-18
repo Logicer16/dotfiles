@@ -46,8 +46,8 @@ if type brew &>/dev/null; then
 {{ if eq .chezmoi.os "darwin" }}
   # openjdk
   if (brew list -1 | grep openjdk); then
-    for jdk in $(ls /usr/local/opt/ | grep openjdk); do
-      eval $rootcmd ln -sfn /usr/local/opt/$jdk/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/$jdk.jdk
+    for jdk in $(ls $(brew --prefix)/opt/ | grep openjdk); do
+      eval $rootcmd ln -sfn $(brew --prefix)/opt/$jdk/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/$jdk.jdk
     done
   fi
 {{ end }}
@@ -137,7 +137,7 @@ done
 if type gem &>/dev/null; then
 {{ if eq .chezmoi.os "darwin" }}
   if type brew &>/dev/null; then
-    eval $rootcmd -H gem update -n /usr/local/bin openssl -- --with-openssl-dir="$(brew --prefix openssl@1.1)" # https://github.com/ruby/openssl/issues/385
+    eval $rootcmd -H gem update -n $(brew --prefix)/bin openssl -- --with-openssl-dir="$(brew --prefix openssl@1.1)" # https://github.com/ruby/openssl/issues/385
   fi
 {{ end }}
   gem update
