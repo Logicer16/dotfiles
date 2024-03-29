@@ -12,4 +12,4 @@
 	defaultBranch = main
 [include]
 	path = credential-config
-  path = signing-config
+	path = signing-config
