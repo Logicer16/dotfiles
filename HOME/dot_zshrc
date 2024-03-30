@@ -69,6 +69,7 @@ $brewPrefix/opt/make/libexec/gnubin:\
 $brewPrefix/opt/ruby/bin:\
 $brewPrefix/opt/curl/bin:\
 $brewPrefix/sbin:\
+$brewPrefix/bin:\
 $PATH"
   export MANPATH="$brewPrefix/man:$MANPATH"
   brewCompletionPath=$brewPrefix/share/zsh/site-functions
