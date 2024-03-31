@@ -49,9 +49,7 @@ DISABLE_AUTO_UPDATE=true
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-# Add plugins with output before 'AUTORUN' and plugins without
-# output after 'AUTORUN'.
-plugins=(zsh-better-npm-completion zsh-completions zsh-syntax-highlighting)
+plugins=(zsh-better-npm-completion zsh-completions zsh-syntax-highlighting vs-code-integration)
 
 export PATH="\
 $HOME/.scripts/posix:\
@@ -77,8 +75,9 @@ $PATH"
 fi
 FPATH="$HOME/.scripts/.completion/zsh:${FPATH}"
 
-# Special VS Code features
-[[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
+# Special terminal features
+POWERLEVEL9K_TERM_SHELL_INTEGRATION=true
+ITERM_SHELL_INTEGRATION_INSTALLED="Yes"
 
 # Oh My Zsh Theme
 ZSH_THEME="powerlevel10k/powerlevel10k"

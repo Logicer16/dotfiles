@@ -4,12 +4,6 @@
   exact = true
   stripComponents = 1
   refreshPeriod = "24h"
-[".oh-my-zsh/custom/plugins/zsh-syntax-highlighting"]
-  type = "archive"
-  url = "https://github.com/zsh-users/zsh-syntax-highlighting/archive/master.tar.gz"
-  exact = true
-  stripComponents = 1
-  refreshPeriod = "24h"
 [".oh-my-zsh/custom/plugins/zsh-better-npm-completion"]
   type = "archive"
   url = "https://github.com/lukechilds/zsh-better-npm-completion/archive/master.tar.gz"
@@ -19,6 +13,18 @@
 [".oh-my-zsh/custom/plugins/zsh-completions"]
   type = "archive"
   url = "https://github.com/zsh-users/zsh-completions/archive/master.tar.gz"
+  exact = true
+  stripComponents = 1
+  refreshPeriod = "24h"
+[".oh-my-zsh/custom/plugins/zsh-syntax-highlighting"]
+  type = "archive"
+  url = "https://github.com/zsh-users/zsh-syntax-highlighting/archive/master.tar.gz"
+  exact = true
+  stripComponents = 1
+  refreshPeriod = "24h"
+[".oh-my-zsh/custom/plugins/zsh-vs-code-integration"]
+  type = "archive"
+  url = "https://github.com/Logicer16/zsh-vs-code-integration/archive/main.tar.gz"
   exact = true
   stripComponents = 1
   refreshPeriod = "24h"
