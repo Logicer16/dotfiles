@@ -62,7 +62,7 @@ brewPrefix=$($HOME/.scripts/posix/getBrewPrefix)
 # Add python, make, Ruby, cURL, Homebrew's "sbin" to PATH
 if [[ ! -z "$brewPrefix" ]]; then
   export PATH="\
-$brewPrefix/$($HOME/.scripts/posix/get_newest_python)/libexec/bin:\
+$brewPrefix/$($HOME/.scripts/posix/getNewestPython)/libexec/bin:\
 $brewPrefix/opt/make/libexec/gnubin:\
 $brewPrefix/opt/ruby/bin:\
 $brewPrefix/opt/curl/bin:\
