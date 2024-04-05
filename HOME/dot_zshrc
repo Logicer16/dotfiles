@@ -62,7 +62,6 @@ brewPrefix=$($HOME/.scripts/posix/getBrewPrefix)
 # Add python, make, Ruby, cURL, Homebrew's "sbin" to PATH
 if [[ ! -z "$brewPrefix" ]]; then
   export PATH="\
-$brewPrefix/$($HOME/.scripts/posix/getNewestPython)/libexec/bin:\
 $brewPrefix/opt/make/libexec/gnubin:\
 $brewPrefix/opt/ruby/bin:\
 $brewPrefix/opt/curl/bin:\
@@ -71,9 +70,12 @@ $brewPrefix/bin:\
 $PATH"
   export MANPATH="$brewPrefix/man:$MANPATH"
   brewCompletionPath=$brewPrefix/share/zsh/site-functions
-  FPATH="$brewCompletionPath:${FPATH}"
+  export FPATH="$brewCompletionPath:${FPATH}"
+  export PATH="\
+$brewPrefix/opt/$($HOME/.scripts/posix/getNewestPython)/libexec/bin:\
+$PATH"
 fi
-FPATH="$HOME/.scripts/.completion/zsh:${FPATH}"
+export FPATH="$HOME/.scripts/.completion/zsh:${FPATH}"
 
 # Special terminal features
 POWERLEVEL9K_TERM_SHELL_INTEGRATION=true
