@@ -34,3 +34,14 @@
   exact = true
   stripComponents = 1
   refreshPeriod = "24h"
+{{- if or (eq .chezmoi.os "darwin") (ne .chezmoi.os "windows") }}
+{{- if eq .chezmoi.os "darwin" }}
+["Library/Fonts/CaskaydiaCove"]
+{{- else if ne .chezmoi.os "windows" }}
+[".local/share/fonts/CaskaydiaCove"]
+{{- end }}
+  type = "archive"
+  url = "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/CascadiaCode.tar.xz"
+  refreshPeriod = "24h"
+  include = ["**/*.ttf"]
+{{- end }}
