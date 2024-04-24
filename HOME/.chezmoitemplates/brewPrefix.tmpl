@@ -1,1 +1,1 @@
-{{- findExecutable "brew" (list "/opt/homebrew/bin" "/usr/local/bin" "~/.linuxbrew/bin" "/home/linuxbrew/.linuxbrew/bin") | osDir | osDir -}}
+{{- output (findExecutable "brew" (list "/opt/homebrew/bin" "/usr/local/bin" "~/.linuxbrew/bin" "/home/linuxbrew/.linuxbrew/bin")) "--prefix" -}}
