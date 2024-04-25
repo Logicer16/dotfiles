@@ -1,1 +1,4 @@
-{{- output (findExecutable "brew" (list "/opt/homebrew/bin" "/usr/local/bin" "~/.linuxbrew/bin" "/home/linuxbrew/.linuxbrew/bin")) "--prefix" -}}
+{{- $brew := findExecutable "brew" (list "/opt/homebrew/bin" "/usr/local/bin" "~/.linuxbrew/bin" "/home/linuxbrew/.linuxbrew/bin") -}}
+{{- if ne $brew "" -}}
+{{- output $brew "--prefix" -}}
+{{- end -}}
