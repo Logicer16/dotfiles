@@ -114,9 +114,7 @@ fi
 
 # nvm
 # must be reloaded
-export NVM_DIR="$HOME/.nvm"
-NVM_PATH=$($HOME/.scripts/posix/nvm_dir)
-[ -s "$NVM_PATH/nvm.sh" ] && \. "$NVM_PATH/nvm.sh"
+_zsh_nvm_load
 
 if type nvm &>/dev/null; then
   nvm install node --reinstall-packages-from=node # Upgrade node version
