@@ -1,3 +1,3 @@
-{{- if lookPath "npm" -}}
+{{- if and (lookPath "npm") (ne .chezmoi.os "windows") -}}
 {{- output "npm" "completion" -}}
 {{- end -}}
