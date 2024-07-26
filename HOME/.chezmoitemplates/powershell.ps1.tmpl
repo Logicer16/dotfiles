@@ -1,13 +1,21 @@
 using namespace System.Management.Automation
 using namespace System.Management.Automation.Language
 
-{{ if eq .chezmoi.os "windows" }}
+{{ if eq .chezmoi.os "windows" -}}
 $env:PATH = "$env:UserProfile\.scripts\windows" + [IO.Path]::PathSeparator + $env:PATH
-{{ else }}
+{{- else -}}
 Invoke-Expression "$HOME/.scripts/posix/icon"
-{{ end }}
+{{- end }}
 
 New-Alias which get-command
+# Mirror my hopelessness from .zshrc
+New-Alias ehco echo
+
+if ($env:WT_SESSION) {
+  # Windows terminal is a bit dumb
+  # https://github.com/microsoft/terminal/issues/11057
+  $env:COLORTERM = "truecolor"
+}
 
 # Completion from files
 Get-ChildItem "$HOME/.scripts/.completion/powershell/" -Filter *.ps1 | 
