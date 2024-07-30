@@ -1,13 +1,3 @@
-function Get-CommandExists {
-  Param(
-    [Parameter(Position=0, Mandatory)]
-    [string[]]
-    $cmdName
-  )
-  
-  Get-Command $cmdName -errorAction SilentlyContinue
-}
-
 # Self-Elevate
 If (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
   $title    = 'Your terminal is not currently elevated'

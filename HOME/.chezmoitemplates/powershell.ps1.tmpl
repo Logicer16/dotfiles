@@ -7,7 +7,9 @@ $env:PATH = "$env:UserProfile\.scripts\windows" + [IO.Path]::PathSeparator + $en
 Invoke-Expression "$HOME/.scripts/posix/icon"
 {{- end }}
 
-New-Alias which get-command
+$env:PATH = "$env:UserProfile\.scripts\pwsh" + [IO.Path]::PathSeparator + $env:PATH
+
+New-Alias which Get-Command
 # Mirror my hopelessness from .zshrc
 New-Alias ehco echo
 
@@ -17,10 +19,10 @@ if ($env:WT_SESSION) {
   $env:COLORTERM = "truecolor"
 }
 
-if (Get-Command "code" -errorAction SilentlyContinue) {
+if (Get-CommandExists "code") {
   $env:VISUAL="`"$((Get-Command "code").Source)`" --wait --new-window"
 }
-if (Get-Command "nvim" -errorAction SilentlyContinue) {
+if (Get-CommandExists "nvim") {
   $env:EDITOR="`"$((Get-Command "nvim").Source)`""
 }
 
@@ -31,7 +33,7 @@ Foreach-Object {
   Invoke-Expression $content
 }
 
-Import-Module PSReadLine
+Import-ModuleIfNeeded "PSReadLine"
 
 # Search history properly
 Set-PSReadLineOption -HistorySearchCursorMovesToEnd

@@ -33,10 +33,10 @@ function New-Safe-Symlink {
   }
 }
 
-if (Get-Command "pwsh.exe" -ErrorAction SilentlyContinue) {
+if (Get-CommandExists pwsh.exe) {
   New-Safe-Symlink (pwsh.exe -c "`$PROFILE.CurrentUserAllHosts") "$HOME\Documents\PowerShell\Profile.ps1"
 }
 
-if (Get-Command "powershell.exe" -ErrorAction SilentlyContinue) {
+if (Get-CommandExists powershell.exe) {
   New-Safe-Symlink (powershell.exe -c "`$PROFILE.CurrentUserAllHosts") "$HOME\Documents\WindowsPowerShell\Profile.ps1"
 }
