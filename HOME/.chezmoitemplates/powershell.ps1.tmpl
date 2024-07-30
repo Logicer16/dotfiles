@@ -17,6 +17,13 @@ if ($env:WT_SESSION) {
   $env:COLORTERM = "truecolor"
 }
 
+if (Get-Command "code" -errorAction SilentlyContinue) {
+  $env:VISUAL="`"$((Get-Command "code").Source)`" --wait --new-window"
+}
+if (Get-Command "nvim" -errorAction SilentlyContinue) {
+  $env:EDITOR="`"$((Get-Command "nvim").Source)`""
+}
+
 # Completion from files
 Get-ChildItem "$HOME/.scripts/.completion/powershell/" -Filter *.ps1 | 
 Foreach-Object {
