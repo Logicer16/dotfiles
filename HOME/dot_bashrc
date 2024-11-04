@@ -7,3 +7,12 @@ if command -v zsh > /dev/null; then
 else
   echo "btw, your using bash. Please install zsh to change to a better shell"
 fi
+
+# Completions
+export BASH_COMPLETION_USER_DIR=$HOME/.scripts/.completion/bash
+
+brewPrefix=$($HOME/.scripts/posix/getBrewPrefix)
+
+if [[ ! -z "$brewPrefix" ]] && [[ -r "$brewPrefix/etc/profile.d/bash_completion.sh" ]]; then
+  . "$brewPrefix/etc/profile.d/bash_completion.sh"
+fi
