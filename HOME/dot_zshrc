@@ -130,6 +130,11 @@ alias ehco="echo"
 # No copyright statement on startup
 alias pwsh="pwsh -NoLogo"
 
+macTailscalePath="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
+if [[ -f "$macTailscalePath" ]]; then
+  alias tailscale="$macTailscalePath"
+fi
+
 # Watch update frequency
 export WATCH_INTERVAL=0.2
 
