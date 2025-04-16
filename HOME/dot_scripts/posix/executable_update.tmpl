@@ -3,154 +3,158 @@
 # Test for flags
 for arg in "$@"; do
   case $arg in
-    --no-restart)
-      local no_restart=true
-      shift
-      ;;
+  --no-restart)
+    local no_restart=true
+    shift
+    ;;
   esac
 done
 
 # Check for Apple Watch sudo
 {{ if eq .chezmoi.os "darwin" }}
-  if ! (cat /etc/pam.d/sudo | grep "auth sufficient pam_watchid.so" &> /dev/null || cat /etc/pam.d/sudo_local | grep "auth sufficient pam_watchid.so" &> /dev/null); then
-    echo "Someone removed pam-watchid. Reinstalling..."
-    bash -c "$(curl -fsSL https://raw.githubusercontent.com/logicer16/pam-watchid/HEAD/install.sh)" -- enable
-  fi
+if ! (cat /etc/pam.d/sudo | grep "auth sufficient pam_watchid.so" &>/dev/null || cat /etc/pam.d/sudo_local | grep "auth sufficient pam_watchid.so" &>/dev/null); then
+  echo "Someone removed pam-watchid. Reinstalling..."
+  bash -c "$(curl -fsSL https://raw.githubusercontent.com/logicer16/pam-watchid/HEAD/install.sh)" -- enable
+fi
 {{ end }}
 
 # Manage root user
 if type doas &>/dev/null; then
-  rootcmd=doas
+  rootcmd="doas"
 elif type sudo &>/dev/null; then
   sudo -v
-  while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done &> /dev/null &
-  rootcmd=sudo
+  while true; do
+    sudo -n true
+    sleep 60
+    kill -0 "$$" || exit
+  done &>/dev/null &
+  rootcmd="sudo"
 elif [ "$EUID" -ne 0 ]; then
   echo "I'm not sure how you expect to run this script without sudo"
 fi
 usercmd="$rootcmd -u $(logname)"
 
 # Run in home folder
-( cd ~
+(
+  cd ~
 
-# Brew
-if type brew &>/dev/null; then
-  # brew cannot run as root
-  eval $usercmd brew update
-  eval $usercmd brew upgrade --greedy
-  eval $usercmd brew autoremove
-  eval $usercmd brew cleanup
+  # Brew
+  if type brew &>/dev/null; then
+    # brew cannot run as root
+    eval $usercmd brew update
+    eval $usercmd brew upgrade --greedy
+    eval $usercmd brew autoremove
+    eval $usercmd brew cleanup
 
-  # Relinking if required
+    # Relinking if required
 
-{{ if eq .chezmoi.os "darwin" }}
-  # openjdk
-  if (brew list -1 | grep openjdk); then
-    for jdk in $(ls $(brew --prefix)/opt/ | grep openjdk); do
+    {{ if eq .chezmoi.os "darwin" }}
+    # openjdk
+    for jdk in $(brew list -1 | grep openjdk); do
+      echo $jdk
       eval $rootcmd ln -sfn $(brew --prefix)/opt/$jdk/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/$jdk.jdk
     done
+    {{ end }}
   fi
-{{ end }}
-fi
 
-{{ if eq .chezmoi.os "darwin" }}
-# mac App Store
-if type brew &>/dev/null; then
-  mas upgrade
-fi
-
-# mac software update
-softwareupdate --install -a --agree-to-license
-{{ end }}
-
-# apt (debian)
-if type apt-get &>/dev/null; then
-  eval $rootcmd apt-get -y update
-  eval $rootcmd apt-get -y dist-upgrade
-  eval $rootcmd apt-get -y check
-  eval $rootcmd apt-get -y autoremove
-  eval $rootcmd apt-get -y autoclean
-fi
-
-# Not sure if this works
-# # ubuntu 
-# if type do-release-upgrade &>/dev/null; then
-#   do-release-upgrade
-# fi
-
-# dnf/yum (i.e. redhat-based package managers)
-if type dnf &>/dev/null; then
-  eval $rootcmd dnf -y upgrade
-  eval $rootcmd dnf -y check
-  eval $rootcmd dnf -y autoremove
-elif type yum &>/dev/null; then
-  eval $rootcmd yum -y upgrade
-  eval $rootcmd yum -y check
-  eval $rootcmd yum -y autoremove
-fi
-
-# pacman (default via yay)
-if type yay &>/dev/null; then
-  # user must have write permision to current directory for aur to work 
-  # ... which is the home directory so it's a bit sus if they don't
-  yay -Syu
-  # remove orphaned packages
-  yay -Qtdp &> /dev/null | yay -Rns - &> /dev/null || :
-elif type pacman &>/dev/null; then
-  eval $rootcmd pacman -Syu
-  # remove orphaned packages
-  eval $rootcmd pacman -Qtdp &> /dev/null | eval $rootcmd pacman -Rns - &> /dev/null || :
-fi
-
-# snaps
-if type snap &>/dev/null; then
-  eval $rootcmd snap refresh
-fi
-
-# flatpaks
-if type flatpak &>/dev/null; then
-  eval $rootcmd flatpak update -y
-fi
-
-# nvm
-# must be reloaded
-_zsh_nvm_load
-
-if type nvm &>/dev/null; then
-  nvm install node --reinstall-packages-from=node # Upgrade node version
-  nvm install --lts # Upgrade lts node version
-fi
-
-# npm
-if type npm &>/dev/null; then
-  npm update --location=global
-fi
-
-# git repos
-for GIT_UPDATE_FOLDER in $GIT_UPDATE_FOLDERS; do
-  git -C $GIT_UPDATE_FOLDER pull --no-rebase -q
-done
-
-# gem
-if type gem &>/dev/null; then
-{{ if eq .chezmoi.os "darwin" }}
+  {{ if eq .chezmoi.os "darwin" }}
+  # Mac App Store
   if type brew &>/dev/null; then
-    eval $rootcmd -H gem update -n $(brew --prefix)/bin openssl -- --with-openssl-dir="$(brew --prefix openssl@1.1)" # https://github.com/ruby/openssl/issues/385
+    mas upgrade
   fi
-{{ end }}
-  gem update
-  gem cleanup
-  # also do root
-  if [ "$EUID" -ne 0 ]; then
-    eval $rootcmd gem update
-    eval $rootcmd gem cleanup
-  fi
-fi
 
-# chezmoi
-if type chezmoi &>/dev/null; then
-  chezmoi update
-fi
+  # Mac software update
+  softwareupdate --install -a --agree-to-license
+  {{ end }}
+
+  # apt (debian)
+  if type apt-get &>/dev/null; then
+    eval $rootcmd apt-get -y update
+    eval $rootcmd apt-get -y dist-upgrade
+    eval $rootcmd apt-get -y check
+    eval $rootcmd apt-get -y autoremove
+    eval $rootcmd apt-get -y autoclean
+  fi
+
+  # Not sure if this works
+  # # ubuntu
+  # if type do-release-upgrade &>/dev/null; then
+  #   do-release-upgrade
+  # fi
+
+  # dnf/yum (i.e. redhat-based package managers)
+  if type dnf &>/dev/null; then
+    eval $rootcmd dnf -y upgrade
+    eval $rootcmd dnf -y check
+    eval $rootcmd dnf -y autoremove
+  elif type yum &>/dev/null; then
+    eval $rootcmd yum -y upgrade
+    eval $rootcmd yum -y check
+    eval $rootcmd yum -y autoremove
+  fi
+
+  # pacman (default via yay)
+  if type yay &>/dev/null; then
+    # user must have write permision to current directory for aur to work
+    # ... which is the home directory so it's a bit sus if they don't
+    yay -Syu
+    # remove orphaned packages
+    yay -Qtdp &>/dev/null | yay -Rns - &>/dev/null || :
+  elif type pacman &>/dev/null; then
+    eval $rootcmd pacman -Syu
+    # remove orphaned packages
+    eval $rootcmd pacman -Qtdp &>/dev/null | eval $rootcmd pacman -Rns - &>/dev/null || :
+  fi
+
+  # snaps
+  if type snap &>/dev/null; then
+    eval $rootcmd snap refresh
+  fi
+
+  # flatpaks
+  if type flatpak &>/dev/null; then
+    eval $rootcmd flatpak update -y
+  fi
+
+  # nvm
+  # must be reloaded
+  _zsh_nvm_load
+
+  if type nvm &>/dev/null; then
+    nvm install node --reinstall-packages-from=node # Upgrade node version
+    nvm install --lts                               # Upgrade lts node version
+  fi
+
+  # npm
+  if type npm &>/dev/null; then
+    npm update --location=global
+  fi
+
+  # git repos
+  for GIT_UPDATE_FOLDER in $GIT_UPDATE_FOLDERS; do
+    git -C $GIT_UPDATE_FOLDER pull --no-rebase -q
+  done
+
+  # gem
+  if type gem &>/dev/null; then
+    {{ if eq .chezmoi.os "darwin" }}
+    if type brew &>/dev/null; then
+      eval $rootcmd -H gem update -n $(brew --prefix)/bin openssl -- --with-openssl-dir="$(brew --prefix openssl@1.1)" # https://github.com/ruby/openssl/issues/385
+    fi
+    {{ end }}
+    gem update
+    gem cleanup
+    # also do root
+    if [ "$EUID" -ne 0 ]; then
+      eval $rootcmd gem update
+      eval $rootcmd gem cleanup
+    fi
+  fi
+
+  # chezmoi
+  if type chezmoi &>/dev/null; then
+    chezmoi update
+  fi
 
 )
 # End Run in home folder
