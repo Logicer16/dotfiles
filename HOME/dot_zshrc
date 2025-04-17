@@ -51,13 +51,6 @@ DISABLE_AUTO_UPDATE=true
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(zsh-better-npm-completion zsh-completions zsh-nvm zsh-syntax-highlighting zsh-vs-code-integration)
 
-export PATH="\
-$HOME/.scripts/posix:\
-$HOME/bin:\
-$HOME/.local/bin:\
-$PATH"
-
-export FPATH="$HOME/.scripts/.completion/zsh:${FPATH}"
 
 brewPrefix=$($HOME/.scripts/posix/getBrewPrefix)
 
@@ -77,6 +70,19 @@ $PATH"
 $brewPrefix/opt/$($HOME/.scripts/posix/getNewestPython)/libexec/bin:\
 $PATH"
 fi
+
+macTailscalePath="/Applications/Tailscale.app/Contents/MacOS"
+if [[ -f "$macTailscalePath/Tailscale" ]]; then
+  export PATH="$macTailscalePath:$PATH"
+fi
+
+export PATH="\
+$HOME/.scripts/posix:\
+$HOME/bin:\
+$HOME/.local/bin:\
+$PATH"
+
+export FPATH="$HOME/.scripts/.completion/zsh:${FPATH}"
 
 # Special terminal features
 POWERLEVEL9K_TERM_SHELL_INTEGRATION=true
@@ -129,11 +135,6 @@ alias mkdir="mkdir -p"
 alias ehco="echo"
 # No copyright statement on startup
 alias pwsh="pwsh -NoLogo"
-
-macTailscalePath="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
-if [[ -f "$macTailscalePath" ]]; then
-  alias tailscale="$macTailscalePath"
-fi
 
 # Watch update frequency
 export WATCH_INTERVAL=0.2
