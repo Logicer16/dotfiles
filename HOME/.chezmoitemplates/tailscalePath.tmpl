@@ -1,0 +1,6 @@
+{{- $macTailscalePath := "/Applications/Tailscale.app/Contents/MacOS/Tailscale" -}}
+{{- if stat $macTailscalePath -}}
+{{- $macTailscalePath -}}
+{{- else if lookPath "tailscale" -}}
+{{- "tailscale" -}}
+{{- end -}}

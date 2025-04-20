@@ -1,3 +1,4 @@
+{{- /* Go Template */ -}}
 {{ if eq .chezmoi.os "darwin" }}
 **/.DS_Store
 {{ end }}
@@ -27,4 +28,10 @@
 {{ else }}
 Documents/PowerShell/
 Documents/WindowsPowerShell/
+{{ end }}
+
+# Tailscale
+{{ $tailscalePath := includeTemplate "tailscalePath.tmpl" . }}
+{{ if or (not $tailscalePath) (eq $tailscalePath "tailscale") }}
+.scripts/posix/tailscale
 {{ end }}

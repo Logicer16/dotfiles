@@ -1,3 +1,4 @@
-{{- if lookPath "tailscale" -}}
-{{- output "tailscale" "completion" "zsh" -}}
+{{- $tailscalePath := includeTemplate "tailscalePath.tmpl" . -}}
+{{- if $tailscalePath -}}
+{{- output $tailscalePath "completion" "zsh" -}}
 {{- end -}}

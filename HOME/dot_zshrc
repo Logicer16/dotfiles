@@ -71,11 +71,6 @@ $brewPrefix/opt/$($HOME/.scripts/posix/getNewestPython)/libexec/bin:\
 $PATH"
 fi
 
-macTailscalePath="/Applications/Tailscale.app/Contents/MacOS"
-if [[ -f "$macTailscalePath/Tailscale" ]]; then
-  export PATH="$macTailscalePath:$PATH"
-fi
-
 export PATH="\
 $HOME/.scripts/posix:\
 $HOME/bin:\
@@ -144,3 +139,5 @@ export HOMEBREW_AUTO_UPDATE_SECS="300" # 5 minutes
 
 # Ignore completion cache
 zstyle ":completion:*:commands" rehash 1
+
+unset brewPrefix brewCompletionPath 
