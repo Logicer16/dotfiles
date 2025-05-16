@@ -117,12 +117,14 @@ usercmd="$rootcmd -u $(logname)"
   fi
 
   # nvm
-  # must be reloaded
-  _zsh_nvm_load
-
-  if type nvm &>/dev/null; then
-    nvm install node --reinstall-packages-from=node # Upgrade node version
-    nvm install --lts                               # Upgrade lts node version
+  if [[ -f "$NVM_DIR/nvm.sh" ]]; then
+    # must be reloaded
+    _zsh_nvm_load
+  
+    if type nvm &>/dev/null; then
+      nvm install node --reinstall-packages-from=node # Upgrade node version
+      nvm install --lts                               # Upgrade lts node version
+    fi
   fi
 
   # npm
