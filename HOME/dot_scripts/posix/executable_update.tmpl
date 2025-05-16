@@ -119,6 +119,7 @@ usercmd="$rootcmd -u $(logname)"
   # nvm
   if [[ -f "$NVM_DIR/nvm.sh" ]]; then
     # must be reloaded
+    source ~/.oh-my-zsh/custom/plugins/zsh-nvm/zsh-nvm.plugin.zsh
     _zsh_nvm_load
   
     if type nvm &>/dev/null; then
