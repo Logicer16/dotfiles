@@ -1,8 +1,5 @@
 #! /usr/bin/env zsh
 
-# Print icon
-~/.scripts/posix/icon
-
 # GPG
 # Requires stdin
 export GPG_TTY=$(tty)
@@ -50,34 +47,6 @@ DISABLE_AUTO_UPDATE=true
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(zsh-better-npm-completion zsh-completions zsh-nvm zsh-syntax-highlighting zsh-vs-code-integration)
-
-
-brewPrefix=$($HOME/.scripts/posix/getBrewPrefix)
-
-# Add python, make, Ruby, cURL, Homebrew's "sbin" to PATH
-if [[ ! -z "$brewPrefix" ]]; then
-  export PATH="\
-$brewPrefix/opt/make/libexec/gnubin:\
-$brewPrefix/opt/ruby/bin:\
-$brewPrefix/opt/curl/bin:\
-$brewPrefix/sbin:\
-$brewPrefix/bin:\
-$PATH"
-  export MANPATH="$brewPrefix/man:$MANPATH"
-  brewCompletionPath=$brewPrefix/share/zsh/site-functions
-  export FPATH="$brewCompletionPath:${FPATH}"
-  export PATH="\
-$brewPrefix/opt/$($HOME/.scripts/posix/getNewestPython)/libexec/bin:\
-$PATH"
-fi
-
-export PATH="\
-$HOME/.scripts/posix:\
-$HOME/bin:\
-$HOME/.local/bin:\
-$PATH"
-
-export FPATH="$HOME/.scripts/.completion/zsh:${FPATH}"
 
 # Special terminal features
 POWERLEVEL9K_TERM_SHELL_INTEGRATION=true
@@ -140,4 +109,4 @@ export HOMEBREW_AUTO_UPDATE_SECS="300" # 5 minutes
 # Ignore completion cache
 zstyle ":completion:*:commands" rehash 1
 
-unset brewPrefix brewCompletionPath 
+unset brewCompletionPath 

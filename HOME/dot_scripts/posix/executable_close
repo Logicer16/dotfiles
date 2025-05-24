@@ -6,7 +6,7 @@ if [[ $1 == "-h" ]]; then
 fi
 
 getPPID() {
-  echo $(ps -p $1 -o ppid=)
+  ps -p $1 -o ppid=
 }
 
 PARENT_PID=$(getPPID $$)
@@ -19,7 +19,7 @@ isLoginShell() {
 
 returnToParentMessage() {
   echo "Closing shell"
-    echo "Exiting to parent shell"
+  echo "Exiting to parent shell"
   if isLoginShell $(getPPID $PARENT_PID); then
     echo "This is the topmost login shell"
   fi
@@ -32,7 +32,8 @@ if type osascript &>/dev/null && isLoginShell $PARENT_PID; then
   printf "\e]2;$(echo "$UNIQUE_ID")\a"
 
   # Must be done synchronously
-  getCurrentWindowID=$(cat <<EOF
+  getCurrentWindowID=$(
+    cat <<EOF
 tell application "Terminal"
   repeat with W in (a reference to windows)
     set [W] to W
@@ -52,10 +53,11 @@ EOF
   IDs=$(osascript -e "$getCurrentWindowID" 2>&1)
 
   if [[ "$IDs" != "" ]]; then
-  echo "Closing tab"
+    echo "Closing tab"
 
-  # Must be done asynchronously and orphanned to avoid "are you sure" prompt due to the active task
-  closeWindows=$(cat <<-EOF
+    # Must be done asynchronously and orphanned to avoid "are you sure" prompt due to the active task
+    closeWindows=$(
+      cat <<-EOF
 
 set rawIDs to "$IDs"
 
@@ -71,10 +73,10 @@ tell application "Terminal"
 end tell
 
 EOF
-  )
+    )
 
-  osascript -e "$closeWindows" 2> /dev/null &
-  disown
+    osascript -e "$closeWindows" 2>/dev/null &
+    disown
 
   else
     returnToParentMessage
@@ -83,5 +85,5 @@ else
   returnToParentMessage
 fi
 
-# Exit from parent shell 
+# Exit from parent shell
 kill -SIGHUP $PARENT_PID

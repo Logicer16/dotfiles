@@ -1,15 +1,4 @@
-export BASH_SILENCE_DEPRECATION_WARNING=1
-
-~/.scripts/posix/icon
-
-if command -v zsh > /dev/null; then
-  echo "btw, your using bash. To make zsh your default use: 'chsh -s $(command -v zsh)'"
-else
-  echo "btw, your using bash. Please install zsh to change to a better shell"
-fi
-
-# Completions
-export BASH_COMPLETION_USER_DIR=$HOME/.scripts/.completion/bash
+#! /usr/bin/env bash
 
 brewPrefix=$($HOME/.scripts/posix/getBrewPrefix)
 

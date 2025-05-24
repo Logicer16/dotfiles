@@ -1,0 +1,33 @@
+#! /usr/bin/env zsh
+
+# Print icon
+~/.scripts/posix/icon
+
+brewPrefix=$($HOME/.scripts/posix/getBrewPrefix)
+
+# Add python, make, Ruby, cURL, Homebrew's "sbin" to PATH
+if [[ ! -z "$brewPrefix" ]]; then
+  export PATH="\
+$brewPrefix/opt/make/libexec/gnubin:\
+$brewPrefix/opt/ruby/bin:\
+$brewPrefix/opt/curl/bin:\
+$brewPrefix/sbin:\
+$brewPrefix/bin:\
+$PATH"
+  export MANPATH="$brewPrefix/man:$MANPATH"
+  brewCompletionPath=$brewPrefix/share/zsh/site-functions
+  export FPATH="$brewCompletionPath:${FPATH}"
+  export PATH="\
+$brewPrefix/opt/$($HOME/.scripts/posix/getNewestPython)/libexec/bin:\
+$PATH"
+fi
+
+export PATH="\
+$HOME/.scripts/posix:\
+$HOME/bin:\
+$HOME/.local/bin:\
+$PATH"
+
+export FPATH="$HOME/.scripts/.completion/zsh:${FPATH}"
+
+unset brewPrefix
