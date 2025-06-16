@@ -1,3 +1,4 @@
+{{- $cascadiaCodeVersion := "2407.24" -}}
 [".oh-my-zsh"]
   type = "archive"
   url = "https://github.com/ohmyzsh/ohmyzsh/archive/master.tar.gz"
@@ -42,12 +43,13 @@
   refreshPeriod = "24h"
 {{- if or (eq .chezmoi.os "darwin") (ne .chezmoi.os "windows") }}
 {{- if eq .chezmoi.os "darwin" }}
-["Library/Fonts/CaskaydiaCove"]
+["Library/Fonts/Cascadia Code (chezmoi)"]
 {{- else if ne .chezmoi.os "windows" }}
-[".local/share/fonts/CaskaydiaCove"]
+[".local/share/fonts/Cascadia Code (chezmoi)"]
 {{- end }}
   type = "archive"
-  url = "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/CascadiaCode.tar.xz"
+  url = "https://github.com/microsoft/cascadia-code/releases/download/v{{ $cascadiaCodeVersion }}/CascadiaCode-{{ $cascadiaCodeVersion }}.zip"
   refreshPeriod = "24h"
-  include = ["**/*.ttf"]
+  include = ["**/ttf/CascadiaCodeNF*.ttf"]
+  stripComponents = 1
 {{- end }}
