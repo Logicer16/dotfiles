@@ -1,0 +1,31 @@
+#! /bin/sh
+
+# 1 Normal Cursor Keys (DECCKM), VT100.
+# 4 Jump (Fast) Scroll (DECSCLM), VT100.
+# 5 Normal Video (DECSCNM), VT100.
+# 6 Normal Cursor Mode (DECOM), VT100.
+# 9 Don't send Mouse X & Y on button press, xterm.
+# 1000 Don't send Mouse X & Y on button press and release. See the section Mouse Tracking.
+# 1001 Don't use Hilite Mouse Tracking, xterm.
+# 1002 Don't use Cell Motion Mouse Tracking, xterm. See the section Button-event tracking.
+#1003 Don't use All Motion Mouse Tracking, xterm. See the section Any-event tracking.
+# 1004 Don't send FocusIn/FocusOut events, xterm.
+# 1005 Disable UTF-8 Mouse Mode, xterm.
+# 1006 Disable SGR Mouse Mode, xterm.
+# 1007 Disable Alternate Scroll Mode, xterm. This corresponds to the alternateScroll resource.
+# 1015 Disable urxvt Mouse Mode.
+# 1016 Disable SGR Mouse PixelMode, xterm.
+# 1049 Use Normal Screen Buffer and restore cursor as in DECRC, xterm. This may be disabled by the titeInhibit resource. This combines the effects of the 1047 and 1048  modes. Use this with terminfo-based applications rather than the 47 mode.
+DECSET_CODES="1 4 5 6 9 1000 1001 1002 1003 1004 1005 1006 1007 1015 1016 1049"
+
+for i in $DECSET_CODES; do
+  printf '%b' "\033[?${i}l"
+done
+
+# Reset colour
+printf '%b' "\033[0m"
+
+# Reset title
+printf '%b' "\033]30;\a"
+printf '%b' "\033]0;\a"
+printf '%b' "\033]2;\a"
