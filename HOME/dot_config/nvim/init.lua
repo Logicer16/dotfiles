@@ -93,7 +93,6 @@ require('lazy').setup({
     },
   },
 
-  
   {
     "joshdick/onedark.vim",
     lazy = false, -- make sure we load this during startup if it is your main colorscheme
@@ -172,6 +171,14 @@ require('lazy').setup({
       'nvim-treesitter/nvim-treesitter-textobjects',
     },
     build = ':TSUpdate',
+  },
+
+  {
+    "lambdalisue/vim-suda",
+    lazy = false, -- make sure we load this during startup if it is your main colorscheme
+    config = function()
+      vim.g.suda_smart_edit = 1
+    end,
   },
 }, {})
 
@@ -384,17 +391,17 @@ local mason_lspconfig = require 'mason-lspconfig'
 mason_lspconfig.setup {
   ensure_installed = vim.tbl_keys(servers),
 }
+-- vim.lsp.config('rust_analyzer', {
+  -- Server-specific settings. See `:help lsp-quickstart`
+  -- settings = {
+  --   ['rust-analyzer'] = {},
+  -- },
 
-mason_lspconfig.setup_handlers {
-  function(server_name)
-    require('lspconfig')[server_name].setup {
-      capabilities = capabilities,
-      on_attach = on_attach,
-      settings = servers[server_name],
-      filetypes = (servers[server_name] or {}).filetypes,
-    }
-  end
-}
+  -- capabilities = capabilities,
+  -- on_attach = on_attach,
+  -- settings = servers[server_name],
+  -- filetypes = (servers[server_name] or {}).filetypes,
+-- })
 
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
