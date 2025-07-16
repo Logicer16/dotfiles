@@ -176,7 +176,7 @@ require('lazy').setup({
   {
     "lambdalisue/vim-suda",
     lazy = false, -- make sure we load this during startup if it is your main colorscheme
-    config = function()
+    init = function()
       vim.g.suda_smart_edit = 1
     end,
   },
